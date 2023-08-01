@@ -44,7 +44,7 @@ import Observation
 			flags.formUnion(.a)
 			pc += 1
 		case false:
-			VirtualMachine.alu(instruction, with: x, y, into: &o, flags: &flags)
+			let o = VirtualMachine.alu(instruction, with: x, y, flags: &flags)
 			let result = UInt16(bitPattern: o)
 
 			if (instruction.m) {
@@ -74,8 +74,12 @@ import Observation
 	/// Information about the side effects of the previous cycle.
 	public var flags = CycleFlags.none
 
-	/// The result of the last cycle.
-	public var o: Int16 = 0
+	/// The current result of the ALU.
+	@inlinable @inline(__always)
+	public var o: Int16 {
+		var tmp = CycleFlags.none
+		return VirtualMachine.alu(instruction, with: x, y, flags: &tmp)
+	}
 
 	/// The first operand of the current instruction.
 	@inlinable @inline(__always)
@@ -100,20 +104,6 @@ import Observation
 	public var ng: Bool {
 		flags.contains(.ng)
 	}
-	
-	/// Simulates an ALU operation, assumes a computation instruction.
-	///
-	/// - Parameters:
-	///   - instruction: The instruction to compute.
-	///   - x: The first operand.
-	///   - y: The second operand.
-	/// - Returns: The result of the operation.
-	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16) -> Int16 {
-		var tmp = CycleFlags.none
-		var result: Int16 = 0
-		alu(instruction, with: x, y, into: &result, flags: &tmp)
-		return result
-	}
 
 	/// Simulates an ALU operation, assumes a computation instruction.
 	///
@@ -123,7 +113,7 @@ import Observation
 	///   - y: The second operand.
 	///   - flags: The receiver for the ``zr`` and ``ng`` flags.
 	/// - Returns: The result of the operation.
-	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16, into output: inout Int16, flags: inout CycleFlags) {
+	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16, flags: inout CycleFlags) -> Int16 {
 		var x = instruction.zx ? 0 : x
 		x = instruction.nx ? ~x : x
 
@@ -136,7 +126,7 @@ import Observation
 		flags.formUnion(o == 0 ? .zr : .none)
 		flags.formUnion(o < 0 ? .ng : .none)
 
-		output = o
+		return o
 	}
 
 	//MARK: - Memory

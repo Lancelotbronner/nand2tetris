@@ -13,11 +13,6 @@ struct ContentView: View {
 
     var body: some View {
         Machine()
-			.toolbar {
-				Button(action: vm.cycle) {
-					Label("Step", systemImage: "arrow.turn.up.right")
-				}
-			}
     }
 }
 

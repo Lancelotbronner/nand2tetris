@@ -11,6 +11,8 @@ import SwiftUI
 public struct Screen: View {
 	@Environment(VirtualMachine.self) private var vm
 
+	public init() { }
+
 	public var body: some View {
 		Canvas { context, size in
 			context.withCGContext { cgcontext in

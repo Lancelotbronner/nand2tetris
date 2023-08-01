@@ -11,6 +11,8 @@ import SwiftUI
 public struct ALU: View {
 	@Environment(VirtualMachine.self) private var vm
 
+	public init() { }
+
 	public var body: some View {
 		HStack {
 			field("X", value: vm.x)

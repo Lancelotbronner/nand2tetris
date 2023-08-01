@@ -11,6 +11,8 @@ import SwiftUI
 public struct CPU: View {
 	@Environment(VirtualMachine.self) private var vm
 
+	public init() { }
+
 	public var body: some View {
 		@Bindable var vm = vm
 		HStack {

@@ -12,6 +12,8 @@ public struct ROM: View {
 	@Environment(\.pedantic) private var pedantic
 	@State private var goto: UInt16?
 
+	public init() { }
+
 	public var body: some View {
 		ScrollViewReader { proxy in
 			TextField("GOTO", value: $goto, format: .number)

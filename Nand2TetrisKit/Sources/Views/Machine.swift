@@ -42,6 +42,34 @@ public struct Machine: View {
 				.formStyle(.grouped)
 			}
 		}
+		.toolbar {
+			MachineToolbar()
+		}
+	}
+}
+
+internal struct MachineToolbar: ToolbarContent {
+	@Environment(VirtualMachine.self) private var vm
+
+	var body: some ToolbarContent {
+		ToolbarItem(placement: .primaryAction) {
+			ControlGroup("Debugging") {
+				Button(action: vm.cycle) {
+					Label("Step", systemImage: "arrow.turn.up.right")
+				}
+			}
+		}
+		ToolbarItem(placement: .primaryAction) {
+			ControlGroup("Simulation") {
+				Button(action: { }) {
+					Label("Stop", systemImage: "stop.fill")
+				}
+				.disabled(true)
+				Button(action: { }) {
+					Label("Run", systemImage: "play.fill")
+				}
+			}
+		}
 	}
 }
 
