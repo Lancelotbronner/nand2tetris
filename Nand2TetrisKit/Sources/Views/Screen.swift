@@ -9,11 +9,7 @@
 import SwiftUI
 
 public struct Screen: View {
-	private let vm: VirtualMachine
-
-	public init(_ vm: VirtualMachine) {
-		self.vm = vm
-	}
+	@Environment(VirtualMachine.self) private var vm
 
 	public var body: some View {
 		Canvas { context, size in
@@ -44,6 +40,7 @@ public struct Screen: View {
 #Preview {
 	let vm = VirtualMachine()
 	vm.ram.randomize()
-	return Screen(vm)
+	return Screen()
+		.environment(vm)
 }
 #endif

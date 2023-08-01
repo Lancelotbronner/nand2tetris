@@ -9,23 +9,20 @@
 import SwiftUI
 
 public struct Machine: View {
-	@Environment(\.pedantic) private var pedantic
-	@Bindable private var vm: VirtualMachine
+	@Environment(VirtualMachine.self) private var vm
 
-	public init(_ vm: VirtualMachine) {
-		self.vm = vm
-	}
+	public init() { }
 
 	public var body: some View {
 		HStack {
 			GroupBox {
-				ROM(vm)
+				ROM()
 			} label: {
 				Text("ROM")
 					.font(.headline)
 			}
 			GroupBox {
-				RAM(vm)
+				RAM()
 			} label: {
 				Text("RAM")
 					.font(.headline)
@@ -33,18 +30,13 @@ public struct Machine: View {
 			VStack {
 				Form {
 					Section("SCREEN") {
-						Screen(vm)
+						Screen()
 					}
 					Section("CPU") {
-						Register("D", value: $vm.d)
-							.textFieldStyle(.roundedBorder)
-						Register("A", value: $vm.a)
-							.textFieldStyle(.roundedBorder)
-						Register("PC", value: $vm.pc)
-							.textFieldStyle(.roundedBorder)
+						CPU()
 					}
 					Section("ALU") {
-						ALU(vm)
+						ALU()
 					}
 				}
 				.formStyle(.grouped)
@@ -57,6 +49,7 @@ public struct Machine: View {
 	let vm = VirtualMachine()
 	vm.rom.randomize()
 	vm.rom[4] = 0
-	return Machine(vm)
+	return Machine()
+		.environment(vm)
 }
 #endif

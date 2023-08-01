@@ -12,17 +12,6 @@ public struct RAM: View {
 	@Environment(\.defaultRegisterStyle) private var defaultStyle
 	@Environment(\.pedantic) private var pedantic
 	@State private var goto: UInt16?
-	private let vm: VirtualMachine
-
-	public init(_ vm: VirtualMachine) {
-		self.vm = vm
-	}
-
-	private var values: AnyRandomAccessCollection<VirtualPointer> {
-		AnyRandomAccessCollection(vm.ram.indices.lazy.map { i in
-			VirtualPointer(i, in: vm.ram)
-		})
-	}
 
 	public var body: some View {
 		ScrollViewReader { proxy in
@@ -33,29 +22,42 @@ public struct RAM: View {
 					}
 				}
 				.textFieldStyle(.roundedBorder)
-				.onAppear {
-					proxy.scrollTo(vm.a)
-				}
-			Table(values) {
-				TableColumn("Address") { pointer in
-					Text(pointer.address.description)
-						.monospaced()
-						.foregroundStyle(pointer.address == vm.a ? Color.cyan : Color.primary)
-						.id(pointer.address)
-				}
-				.width(50)
-				.alignment(.trailing)
-				TableColumn("Value") { pointer in
-					TextField("", value: pointer.binding, format: VirtualPointer.SignedFormat(pedantic: pedantic))
-						.monospaced()
-						.multilineTextAlignment(.trailing)
-						.labelsHidden()
-				}
-				.alignment(.numeric)
-			}
-			.tableColumnHeaders(.hidden)
-			.alternatingRowBackgrounds(.disabled)
+//			LazyVStack {
+//				ForEach(0..<32768) { address in
+//					Text(address.description)
+//				}
+//			}
+			List(0..<32768, rowContent: CellRAM.init)
+			.monospaced()
+			.multilineTextAlignment(.trailing)
 		}
+	}
+}
+
+internal struct CellRAM: View {
+	@Environment(VirtualMachine.self) private var vm
+	let address: Int
+
+	init(_ address: Int) {
+		self.address = address
+	}
+
+	private var _value: Binding<UInt16> {
+		Binding {
+			vm.ram[address]
+		} set: {
+			vm.ram[address] = $0
+		}
+	}
+
+	var body: some View {
+		HStack {
+			Text(address.description)
+				.frame(width: 50, alignment: .trailing)
+			TextField(address.description, value: _value, format: .number)
+		}
+		.foregroundStyle(address == vm.a ? Color.cyan : Color.primary)
+		.id(address)
 	}
 }
 
@@ -64,9 +66,10 @@ public struct RAM: View {
 	vm.ram.randomize()
 	return Form {
 		Section("RAM") {
-			RAM(vm)
+			RAM()
 		}
 	}
+	.environment(vm)
 	.formStyle(.grouped)
 }
 #endif

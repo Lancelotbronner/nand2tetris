@@ -9,43 +9,19 @@ import SwiftUI
 import Nand2TetrisKit
 
 struct ContentView: View {
-	@State private var running: Task<Void, Never>?
-	private let vm: VirtualMachine
-
-	init(_ vm: VirtualMachine) {
-		self.vm = vm
-	}
+	@Environment(VirtualMachine.self) private var vm
 
     var body: some View {
-        Machine(vm)
+        Machine()
 			.toolbar {
 				Button(action: vm.cycle) {
 					Label("Step", systemImage: "arrow.turn.up.right")
 				}
-				Spacer()
-				Button {
-					running = nil
-				} label: {
-					Label("Stop", systemImage: "stop.fill")
-				}
-				.disabled(running == nil)
-				Button {
-					guard running == nil else { return }
-					running = Task {
-						while true {
-							vm.cycle()
-						}
-					}
-				} label: {
-					Label("Run", systemImage: "play.fill")
-				}
-				.disabled(running != nil)
 			}
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-		ContentView(VirtualMachine())
-    }
+#Preview {
+	ContentView()
+		.environment(VirtualMachine())
 }

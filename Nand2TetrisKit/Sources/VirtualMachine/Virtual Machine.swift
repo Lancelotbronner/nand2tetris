@@ -48,10 +48,8 @@ import Observation
 			let result = UInt16(bitPattern: o)
 
 			if (instruction.m) {
-				withMutation(keyPath: \.m) {
-					m = result;
-					flags.formUnion(.m)
-				}
+				m = result;
+				flags.formUnion(.m)
 			}
 			if (instruction.d) {
 				d = result;
@@ -141,12 +139,10 @@ import Observation
 		output = o
 	}
 
-	//MARK: - ROM
+	//MARK: - Memory
 
 	/// The read-only memory of the computer
 	public var rom = VirtualMemory()
-
-	//MARK: - RAM
 
 	/// The read-write memory of the computer
 	public var ram = VirtualMemory()

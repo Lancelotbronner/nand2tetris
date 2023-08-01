@@ -9,19 +9,19 @@
 import SwiftUI
 
 public struct ALU: View {
-	@Bindable private var vm: VirtualMachine
-
-	public init(_ vm: VirtualMachine) {
-		self.vm = vm
-	}
+	@Environment(VirtualMachine.self) private var vm
 
 	public var body: some View {
-		field("X", value: vm.x)
-		field("Y", value: vm.y)
-		Text(vm.instruction.description)
-			.monospaced()
-			.foregroundStyle(.secondary)
-		field("O", value: vm.o)
+		HStack {
+			field("X", value: vm.x)
+			field("Y", value: vm.y)
+		}
+		HStack {
+			Text(vm.instruction.description)
+				.monospaced()
+				.frame(maxWidth: .infinity, alignment: .center)
+			field("O", value: vm.o)
+		}
 	}
 
 	private func field(_ title: LocalizedStringKey, value: Int16) -> some View {
@@ -41,8 +41,9 @@ public struct ALU: View {
 	let vm = VirtualMachine()
 	vm.rom[0] = Instruction(assign: .notY, to: .d, jump: .jmp).rawValue
 	return Form {
-		ALU(vm)
+		ALU()
 	}
+	.environment(vm)
 	.formStyle(.grouped)
 }
 #endif

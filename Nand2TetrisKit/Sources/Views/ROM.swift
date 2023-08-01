@@ -10,35 +10,51 @@ import SwiftUI
 
 public struct ROM: View {
 	@Environment(\.pedantic) private var pedantic
-	private let vm: VirtualMachine
-
-	public init(_ vm: VirtualMachine) {
-		self.vm = vm
-	}
-
-	private var values: AnyRandomAccessCollection<VirtualPointer> {
-		AnyRandomAccessCollection(vm.rom.indices.lazy.map { i in
-			VirtualPointer(i, in: vm.rom)
-		})
-	}
+	@State private var goto: UInt16?
 
 	public var body: some View {
-		Table(values) {
-			TableColumn("Address") { pointer in
-				Text(pointer.address.description)
-					.monospaced()
-					.foregroundStyle(pointer.address == vm.pc ? Color.cyan : Color.primary)
-			}
-			.width(50)
-			.alignment(.trailing)
-			TableColumn("Instruction") { pointer in
-				TextField("", value: pointer.binding, format: VirtualPointer.AssemblyFormat(pedantic: pedantic))
-					.monospaced()
-					.labelsHidden()
-			}
+		ScrollViewReader { proxy in
+			TextField("GOTO", value: $goto, format: .number)
+				.onSubmit {
+					if let goto {
+						proxy.scrollTo(goto, anchor: .top)
+					}
+				}
+				.textFieldStyle(.roundedBorder)
+			//					LazyVStack {
+			//						ForEach(0..<32768, content: CellRAM.init)
+			//					}
+			List(0..<32768, rowContent: CellROM.init)
+				.monospaced()
 		}
-		.tableColumnHeaders(.hidden)
-		.alternatingRowBackgrounds(.disabled)
+	}
+}
+
+internal struct CellROM: View {
+	@Environment(VirtualMachine.self) private var vm
+	@Environment(\.pedantic) private var pedantic
+	let address: Int
+
+	init(_ address: Int) {
+		self.address = address
+	}
+
+	private var _value: Binding<UInt16> {
+		Binding {
+			vm.rom[address]
+		} set: {
+			vm.rom[address] = $0
+		}
+	}
+
+	var body: some View {
+		HStack {
+			Text(address.description)
+				.frame(width: 50, alignment: .trailing)
+			TextField(address.description, value: _value, format: VirtualPointer.AssemblyFormat(pedantic: pedantic))
+		}
+		.foregroundStyle(address == vm.pc ? Color.cyan : Color.primary)
+		.id(address)
 	}
 }
 
@@ -48,9 +64,10 @@ public struct ROM: View {
 	vm.rom[4] = 0
 	return Form {
 		Section("ROM") {
-			ROM(vm)
+			ROM()
 		}
 	}
+	.environment(vm)
 	.formStyle(.grouped)
 }
 #endif
