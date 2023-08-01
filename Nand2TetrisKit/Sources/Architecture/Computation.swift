@@ -18,7 +18,7 @@ public struct Computation: RawRepresentable, OptionSet {
 	}
 
 	public init(bitPattern rawValue: UInt16) {
-		self.init(rawValue: (rawValue & 0x7F) << 7)
+		self.init(rawValue: (rawValue & 0x7F) << 6)
 	}
 
 	public static let allCases: [Computation] = {

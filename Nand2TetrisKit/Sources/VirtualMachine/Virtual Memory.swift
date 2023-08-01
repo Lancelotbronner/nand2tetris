@@ -70,6 +70,20 @@ public struct VirtualMemory: RandomAccessCollection, MutableCollection {
 	}
 
 	@inlinable @inline(__always)
+	public mutating func load(_ data: [UInt16]) {
+		for i in 0..<Swift.min(data.endIndex, VirtualMemory.size) {
+			storage[i] = data[i]
+		}
+	}
+
+	@inlinable @inline(__always)
+	public mutating func randomize() {
+		for i in indices {
+			storage[i] = .random(in: 0..<UInt16.max)
+		}
+	}
+
+	@inlinable @inline(__always)
 	public func makeIterator() -> Array<UInt16>.Iterator {
 		storage.makeIterator()
 	}

@@ -36,7 +36,7 @@ extension Instruction: LosslessStringConvertible {
 		}
 
 		if let j = description.lastIndex(of: ";") {
-			jump = try Jump(description.suffix(from: j), pedantic: pedantic)
+			jump = try Jump(description.suffix(from: description.index(after: j)), pedantic: pedantic)
 			endIndex = j
 		} else {
 			jump = .none

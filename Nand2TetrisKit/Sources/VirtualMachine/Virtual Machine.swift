@@ -5,76 +5,90 @@
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct VirtualMachine {
+import Observation
+
+@Observable public final class VirtualMachine {
+
+	public init() { }
 
 	//MARK: - CPU
 
-	/// The program counter
+	/// The program counter.
 	public var pc: UInt16 = 0
 
-	/// The data register
+	/// The data register.
 	public var d: UInt16 = 0
 
-	/// The address register
+	/// The address register.
 	public var a: UInt16 = 0
 
-	/// The value pointed to by ``a``
-	@inlinable @inline(__always)
+	/// The value pointed to by ``a``.
+	@ObservationIgnored @inlinable @inline(__always)
 	public var m: UInt16 {
 		_read { yield ram[a] }
 		_modify { yield &ram[a] }
 	}
 
+	/// The instruction to be executed.
 	@inlinable @inline(__always)
 	public var instruction: Instruction {
 		Instruction(rawValue: rom[pc])
 	}
-
-	@inlinable public mutating func cycle() {
+	
+	/// Executes a single CPU cycle.
+	public func cycle() {
 		flags = CycleFlags(instruction)
-		let result = UInt16(bitPattern: o)
-
-		if (instruction.lt && ng || instruction.eq && zr || instruction.gt && !ng) {
-			pc = a
-			flags.formUnion(.jmp)
-		} else {
-			pc += 1
-		}
-
-		if (instruction.m) {
-			m = result;
-			flags.formUnion(.m)
-		}
-		if (instruction.d) {
-			d = result;
-			flags.formUnion(.d)
-		}
-		if (instruction.a) {
-			a = result;
+		switch instruction.isAddressing {
+		case true:
+			a = instruction.rawValue
 			flags.formUnion(.a)
+			pc += 1
+		case false:
+			VirtualMachine.alu(instruction, with: x, y, into: &o, flags: &flags)
+			let result = UInt16(bitPattern: o)
+
+			if (instruction.m) {
+				withMutation(keyPath: \.m) {
+					m = result;
+					flags.formUnion(.m)
+				}
+			}
+			if (instruction.d) {
+				d = result;
+				flags.formUnion(.d)
+			}
+			if (instruction.a) {
+				a = result;
+				flags.formUnion(.a)
+			}
+
+			if (instruction.lt && ng || instruction.eq && zr || instruction.gt && !ng) {
+				pc = a
+				flags.formUnion(.jmp)
+			} else {
+				pc += 1
+			}
 		}
 	}
 
 	//MARK: - ALU
 
-	/// Wether the result is zero
-	@usableFromInline internal var flags = CycleFlags.none
+	/// Information about the side effects of the previous cycle.
+	public var flags = CycleFlags.none
 
+	/// The result of the last cycle.
+	public var o: Int16 = 0
+
+	/// The first operand of the current instruction.
 	@inlinable @inline(__always)
 	public var x: Int16 {
 		Int16(bitPattern: d)
 	}
 
+	/// The second operand of the current instruction.
 	@inlinable @inline(__always)
 	public var y: Int16 {
 		Int16(bitPattern: instruction.isIndirect ? m : a)
-	}
-
-	@inlinable @inline(__always)
-	public var o: Int16 {
-		mutating get {
-			VirtualMachine.alu(instruction, with: x, y, flags: &flags)
-		}
 	}
 
 	/// Wether the ALU resulted in a zero
@@ -88,63 +102,68 @@ public struct VirtualMachine {
 	public var ng: Bool {
 		flags.contains(.ng)
 	}
-
+	
+	/// Simulates an ALU operation, assumes a computation instruction.
+	///
+	/// - Parameters:
+	///   - instruction: The instruction to compute.
+	///   - x: The first operand.
+	///   - y: The second operand.
+	/// - Returns: The result of the operation.
 	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16) -> Int16 {
 		var tmp = CycleFlags.none
-		let result = alu(instruction, with: x, y, flags: &tmp)
+		var result: Int16 = 0
+		alu(instruction, with: x, y, into: &result, flags: &tmp)
 		return result
 	}
 
-	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16, flags: inout CycleFlags) -> Int16 {
-		var x = x
-		var y = y
+	/// Simulates an ALU operation, assumes a computation instruction.
+	///
+	/// - Parameters:
+	///   - instruction: The instruction to compute.
+	///   - x: The first operand.
+	///   - y: The second operand.
+	///   - flags: The receiver for the ``zr`` and ``ng`` flags.
+	/// - Returns: The result of the operation.
+	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16, into output: inout Int16, flags: inout CycleFlags) {
+		var x = instruction.zx ? 0 : x
+		x = instruction.nx ? ~x : x
 
-		// Compute X
-		if (instruction.zx) {
-			x = 0;
-		}
-		if (instruction.nx) {
-			x = ~x;
-		}
+		var y = instruction.zy ? 0 : y
+		y = instruction.ny ? ~y : y
 
-		// Compute Y
-		if (instruction.zy) {
-			y = 0;
-		}
-		if (instruction.ny) {
-			y = ~y;
-		}
+		var o = instruction.f ? x+y : x&y;
+		o = instruction.no ? ~o : o
 
-		// Compute Out
-		var o = instruction.isAdd ? x+y : x&y;
-		if (instruction.no) {
-			o = ~o;
-		}
+		flags.formUnion(o == 0 ? .zr : .none)
+		flags.formUnion(o < 0 ? .ng : .none)
 
-		// Update flags
-		if o == 0 {
-			flags.formUnion(.zr)
-		}
-		if o < 0 {
-			flags.formUnion(.ng)
-		}
-
-		return o
+		output = o
 	}
 
 	//MARK: - ROM
 
 	/// The read-only memory of the computer
-	public var rom: VirtualMemory
+	public var rom = VirtualMemory()
 
 	//MARK: - RAM
 
 	/// The read-write memory of the computer
-	public var ram: VirtualMemory
+	public var ram = VirtualMemory()
 
-	public init() {
-		rom = .init()
-		ram = .init()
+	//MARK: - IO
+
+	/// The keyboard register.
+	@ObservationIgnored @inlinable @inline(__always)
+	public var screen: ArraySlice<UInt16> {
+		ram.storage[16384..<24576]
+	}
+
+	/// The keyboard register.
+	@ObservationIgnored @inlinable @inline(__always)
+	public var keyboard: UInt16 {
+		_read { yield ram[24576] }
+		_modify { yield &ram[24576] }
 	}
 
 }

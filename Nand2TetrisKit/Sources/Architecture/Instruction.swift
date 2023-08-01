@@ -20,7 +20,7 @@ public struct Instruction: RawRepresentable {
 	}
 
 	/// Wether the instruction is an addressing
-	public var isAdressing: Bool {
+	public var isAddressing: Bool {
 		rawValue & 0x8000 == 0
 	}
 
@@ -31,13 +31,14 @@ public struct Instruction: RawRepresentable {
 
 	//MARK: - Computing Instruction
 
-	@_transparent public init(assign computation: Computation, to destination: Destination = .none, jump: Jump = .none) {
-		self.init(rawValue: computation.rawValue | destination.rawValue | jump.rawValue)
+	@inlinable @inline(__always)
+	public init(assign computation: Computation, to destination: Destination = .none, jump: Jump = .none) {
+		self.init(rawValue: 0x8000 | computation.rawValue | destination.rawValue | jump.rawValue)
 	}
 
 	/// Wether the instruction is a computation
 	public var isComputing: Bool {
-		!isAdressing
+		!isAddressing
 	}
 
 	public var computation: Computation {
@@ -83,19 +84,19 @@ public struct Instruction: RawRepresentable {
 		Destination(mask: rawValue)
 	}
 
+	/// Wether to store the result in the address register (A)
+	public var a: Bool {
+		destination.contains(.a)
+	}
+
 	/// Wether to store the result to memory (M[A])
 	public var m: Bool {
-		rawValue & 0x20 != 0
+		destination.contains(.m)
 	}
 
 	/// Wether to store the result to the data register (D)
 	public var d: Bool {
-		rawValue & 0x10 != 0
-	}
-
-	/// Wether to store the result in the address register (A)
-	public var a: Bool {
-		rawValue & 0x8 != 0
+		destination.contains(.d)
 	}
 
 	public var jump: Jump {
@@ -132,16 +133,6 @@ public struct Instruction: RawRepresentable {
 	/// Wether a computation instruction will AND operands together
 	@_transparent public var isAnd: Bool {
 		!f
-	}
-
-}
-
-//MARK: - Integrations
-
-extension Instruction: ExpressibleByIntegerLiteral {
-
-	public init(integerLiteral value: UInt16) {
-		self.init(rawValue: value)
 	}
 
 }

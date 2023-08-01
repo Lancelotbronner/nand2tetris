@@ -11,9 +11,7 @@
 		733B04852978B60900B91D98 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733B04842978B60900B91D98 /* ContentView.swift */; };
 		733B04872978B60A00B91D98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 733B04862978B60A00B91D98 /* Assets.xcassets */; };
 		733B048B2978B60A00B91D98 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 733B048A2978B60A00B91D98 /* Preview Assets.xcassets */; };
-		733B04972978B83000B91D98 /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733B04962978B83000B91D98 /* Register.swift */; };
-		733B04992978B8E600B91D98 /* HackEmulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733B04982978B8E600B91D98 /* HackEmulator.swift */; };
-		733B04A02978BCD400B91D98 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733B049F2978BCD400B91D98 /* Memory.swift */; };
+		7376E7CA2A78DFE000928A38 /* Nand2TetrisKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7376E7C92A78DFE000928A38 /* Nand2TetrisKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,10 +21,6 @@
 		733B04862978B60A00B91D98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		733B04882978B60A00B91D98 /* Nand2Tetris.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nand2Tetris.entitlements; sourceTree = "<group>"; };
 		733B048A2978B60A00B91D98 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		733B04962978B83000B91D98 /* Register.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Register.swift; sourceTree = "<group>"; };
-		733B04982978B8E600B91D98 /* HackEmulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HackEmulator.swift; sourceTree = "<group>"; };
-		733B049F2978BCD400B91D98 /* Memory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
-		735880A02A77A009000125AE /* Nand2TetrisKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Nand2TetrisKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7376E7CA2A78DFE000928A38 /* Nand2TetrisKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,7 +38,6 @@
 		733B04762978B60900B91D98 = {
 			isa = PBXGroup;
 			children = (
-				735880A02A77A009000125AE /* Nand2TetrisKit */,
 				733B04812978B60900B91D98 /* Nand2Tetris */,
 				733B04802978B60900B91D98 /* Products */,
 				733B04922978B64D00B91D98 /* Frameworks */,
@@ -61,7 +55,6 @@
 		733B04812978B60900B91D98 /* Nand2Tetris */ = {
 			isa = PBXGroup;
 			children = (
-				733B04952978B82900B91D98 /* Components */,
 				733B04822978B60900B91D98 /* App.swift */,
 				733B04842978B60900B91D98 /* ContentView.swift */,
 				733B04862978B60A00B91D98 /* Assets.xcassets */,
@@ -86,16 +79,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		733B04952978B82900B91D98 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				733B04962978B83000B91D98 /* Register.swift */,
-				733B04982978B8E600B91D98 /* HackEmulator.swift */,
-				733B049F2978BCD400B91D98 /* Memory.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -113,6 +96,7 @@
 			);
 			name = Nand2Tetris;
 			packageProductDependencies = (
+				7376E7C92A78DFE000928A38 /* Nand2TetrisKit */,
 			);
 			productName = Nand2Tetris;
 			productReference = 733B047F2978B60900B91D98 /* Nand2Tetris.app */;
@@ -168,10 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				733B04972978B83000B91D98 /* Register.swift in Sources */,
-				733B04992978B8E600B91D98 /* HackEmulator.swift in Sources */,
 				733B04852978B60900B91D98 /* ContentView.swift in Sources */,
-				733B04A02978BCD400B91D98 /* Memory.swift in Sources */,
 				733B04832978B60900B91D98 /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,6 +375,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7376E7C92A78DFE000928A38 /* Nand2TetrisKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Nand2TetrisKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 733B04772978B60900B91D98 /* Project object */;
 }
