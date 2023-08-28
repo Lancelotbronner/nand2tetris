@@ -7,29 +7,21 @@
 
 public struct VirtualPointer: Identifiable {
 
+	public let vm: VirtualMachine
 	public let id: Int
-	@usableFromInline var memory: VirtualMemory
 
-	@usableFromInline init(_ id: Int, in memory: VirtualMemory) {
-		self.id = id
-		self.memory = memory
+	@usableFromInline init(_ offset: Int, in vm: VirtualMachine) {
+		self.vm = vm
+		self.id = offset
 	}
 
-	@inlinable @inline(__always)
 	public var address: UInt16 {
 		UInt16(id)
 	}
 
-	@inlinable @inline(__always)
 	public var value: UInt16 {
-		_read { yield memory[id] }
-//		_modify { yield &memory[id] }
-		nonmutating set {
-			// This will probably bite me back at some point
-			memory.storage.withUnsafeBufferPointer { buffer in
-				UnsafeMutableBufferPointer(mutating: buffer)[id] = newValue
-			}
-		}
+		_read { yield vm._ram[id] }
+		nonmutating _modify { yield &vm._ram[id] }
 	}
 
 }
@@ -127,11 +119,22 @@ extension VirtualPointer {
 		public init(pedantic: Bool) {
 			parseStrategy = ParseStrategy(pedantic: pedantic)
 		}
-		
+
+		public var pedantic: AssemblyFormat {
+			AssemblyFormat(pedantic: true)
+		}
+
 		public func format(_ value: UInt16) -> String {
 			Instruction(rawValue: value).description
 		}
 	}
 
 }
+
+extension FormatStyle where FormatInput == UInt16, FormatOutput == String {
+
+	public static var assembly: VirtualPointer.AssemblyFormat { .init(pedantic: false) }
+
+}
+
 #endif

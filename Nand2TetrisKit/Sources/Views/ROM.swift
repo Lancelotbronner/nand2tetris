@@ -9,8 +9,10 @@
 import SwiftUI
 
 public struct ROM: View {
+	@Environment(VirtualMachine.self) private var vm
 	@Environment(\.pedantic) private var pedantic
 	@State private var goto: UInt16?
+	@State private var selection: UInt16?
 
 	public init() { }
 
@@ -20,14 +22,15 @@ public struct ROM: View {
 				.onSubmit {
 					if let goto {
 						proxy.scrollTo(goto, anchor: .top)
+						self.goto = nil
 					}
 				}
 				.textFieldStyle(.roundedBorder)
-			//					LazyVStack {
-			//						ForEach(0..<32768, content: CellRAM.init)
-			//					}
-			List(0..<32768, rowContent: CellROM.init)
-				.monospaced()
+			List(0..<32768, selection: $goto) { address in
+				CellROM(address)
+					.id(address)
+			}
+			.monospaced()
 		}
 	}
 }
@@ -41,22 +44,14 @@ internal struct CellROM: View {
 		self.address = address
 	}
 
-	private var _value: Binding<UInt16> {
-		Binding {
-			vm.rom[address]
-		} set: {
-			vm.rom[address] = $0
-		}
-	}
-
 	var body: some View {
+		@Bindable var vm = vm
 		HStack {
 			Text(address.description)
 				.frame(width: 50, alignment: .trailing)
-			TextField(address.description, value: _value, format: VirtualPointer.AssemblyFormat(pedantic: pedantic))
+			TextField(address.description, value: $vm._rom[address], format: VirtualPointer.AssemblyFormat(pedantic: pedantic))
 		}
 		.foregroundStyle(address == vm.pc ? Color.cyan : Color.primary)
-		.id(address)
 	}
 }
 

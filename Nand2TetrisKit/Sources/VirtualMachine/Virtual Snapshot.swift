@@ -12,8 +12,8 @@ public struct VirtualSnapshot {
 		pc = 0
 		d = 0
 		a = 0
-		rom = VirtualMemory()
-		ram = VirtualMemory()
+		rom = []
+		ram = []
 	}
 
 	public init(_ title: String, of vm: VirtualMachine) {
@@ -21,8 +21,8 @@ public struct VirtualSnapshot {
 		pc = vm.pc
 		d = vm.d
 		a = vm.a
-		rom = vm.rom
-		ram = vm.ram
+		rom = vm._rom
+		ram = vm._ram
 	}
 
 	/// Arbitrary title for the snapshot, such as the loaded file or a labeled bugged state.
@@ -42,12 +42,12 @@ public struct VirtualSnapshot {
 	//MARK: - ROM
 
 	/// The read-only memory of the computer
-	public var rom: VirtualMemory
+	public var rom: [UInt16]
 
 	//MARK: - RAM
 
 	/// The read-write memory of the computer
-	public var ram: VirtualMemory
+	public var ram: [UInt16]
 
 }
 
@@ -66,13 +66,13 @@ extension VirtualSnapshot {
 		pc = data.consume() ?? 0
 		d = data.consume() ?? 0
 		a = data.consume() ?? 0
-		rom = VirtualMemory(storage: data.consume(VirtualMemory.size))
-		ram = VirtualMemory(storage: data.consume(VirtualMemory.size))
+		rom = data.consume(VirtualMachine.memory)
+		ram = data.consume(VirtualMachine.memory)
 	}
 
 	public var data: Data {
 		var data = Data()
-		data.reserveCapacity(VirtualMemory.size * 2 + 6 + title.count * 2)
+		data.reserveCapacity(VirtualMachine.memory * 2 + 6 + title.count * 2)
 		if let title = title.data(using: .utf8) {
 			data.append(title)
 		}
@@ -80,10 +80,10 @@ extension VirtualSnapshot {
 		data.append(bytesOf: pc)
 		data.append(bytesOf: d)
 		data.append(bytesOf: a)
-		rom.storage.withUnsafeBytes { buffer in
+		rom.withUnsafeBytes { buffer in
 			data.append(buffer.bindMemory(to: UInt8.self))
 		}
-		ram.storage.withUnsafeBytes { buffer in
+		ram.withUnsafeBytes { buffer in
 			data.append(buffer.bindMemory(to: UInt8.self))
 		}
 		return data

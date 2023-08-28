@@ -21,15 +21,14 @@ public struct RAM: View {
 				.onSubmit {
 					if let goto {
 						proxy.scrollTo(goto, anchor: .top)
+						self.goto = nil
 					}
 				}
 				.textFieldStyle(.roundedBorder)
-//			LazyVStack {
-//				ForEach(0..<32768) { address in
-//					Text(address.description)
-//				}
-//			}
-			List(0..<32768, rowContent: CellRAM.init)
+			List(0..<32768) { address in
+				CellRAM(address)
+					.id(address)
+			}
 			.monospaced()
 			.multilineTextAlignment(.trailing)
 		}
@@ -44,22 +43,14 @@ internal struct CellRAM: View {
 		self.address = address
 	}
 
-	private var _value: Binding<UInt16> {
-		Binding {
-			vm.ram[address]
-		} set: {
-			vm.ram[address] = $0
-		}
-	}
-
 	var body: some View {
+		@Bindable var vm = vm
 		HStack {
 			Text(address.description)
 				.frame(width: 50, alignment: .trailing)
-			TextField(address.description, value: _value, format: .number)
+			TextField(address.description, value: $vm._ram[address], format: .number)
 		}
 		.foregroundStyle(address == vm.a ? Color.cyan : Color.primary)
-		.id(address)
 	}
 }
 

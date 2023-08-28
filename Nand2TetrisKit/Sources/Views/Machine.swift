@@ -15,22 +15,21 @@ public struct Machine: View {
 
 	public var body: some View {
 		HStack {
-			GroupBox {
-				ROM()
-			} label: {
-				Text("ROM")
-					.font(.headline)
+			Form {
+				Section("ROM") {
+					ROM()
+				}
 			}
-			GroupBox {
-				RAM()
-			} label: {
-				Text("RAM")
-					.font(.headline)
+			Form {
+				Section("RAM") {
+					RAM()
+				}
 			}
 			VStack {
 				Form {
 					Section("SCREEN") {
 						Screen()
+						Keyboard()
 					}
 					Section("CPU") {
 						CPU()
@@ -39,9 +38,9 @@ public struct Machine: View {
 						ALU()
 					}
 				}
-				.formStyle(.grouped)
 			}
 		}
+		.formStyle(.grouped)
 		.toolbar {
 			MachineToolbar()
 		}
@@ -50,9 +49,27 @@ public struct Machine: View {
 
 internal struct MachineToolbar: ToolbarContent {
 	@Environment(VirtualMachine.self) private var vm
+	@State private var simulating: Task<Void, Never>?
+
+	private func simulate() {
+		guard simulating == nil else { return }
+		simulating = Task {
+			while !Task.isCancelled {
+				vm.cycle()
+				await Task.yield()
+			}
+		}
+	}
+
+	private func pause() {
+		simulating?.cancel()
+		simulating = nil
+	}
 
 	var body: some ToolbarContent {
 		ToolbarItem(placement: .primaryAction) {
+			//TODO: Add Import buttons for ROM/Assembly/Snapshot
+			//TODO: Add Export buttons for ROM/Assembly/Snapshot
 			ControlGroup("Debugging") {
 				Button(action: vm.cycle) {
 					Label("Step", systemImage: "arrow.turn.up.right")
@@ -61,11 +78,11 @@ internal struct MachineToolbar: ToolbarContent {
 		}
 		ToolbarItem(placement: .primaryAction) {
 			ControlGroup("Simulation") {
-				Button(action: { }) {
+				Button(action: pause) {
 					Label("Stop", systemImage: "stop.fill")
 				}
-				.disabled(true)
-				Button(action: { }) {
+				.disabled(simulating == nil)
+				Button(action: simulate) {
 					Label("Run", systemImage: "play.fill")
 				}
 			}

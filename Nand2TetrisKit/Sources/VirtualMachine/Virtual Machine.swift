@@ -9,7 +9,23 @@ import Observation
 
 @Observable public final class VirtualMachine {
 
-	public init() { }
+	/// The size of the virtual machine's ROM and RAM.
+	public static let memory = 32_768
+
+	public init() {
+		_rom = .init(repeating: 0, count: VirtualMachine.memory)
+		_ram = .init(repeating: 0, count: VirtualMachine.memory)
+	}
+
+	public init(
+		rom: [UInt16] = Array(repeating: 0, count: VirtualMachine.memory),
+		ram: [UInt16] = Array(repeating: 0, count: VirtualMachine.memory)
+	) {
+		_rom = rom
+		_ram = ram
+		_rom.reserveCapacity(VirtualMachine.memory)
+		_ram.reserveCapacity(VirtualMachine.memory)
+	}
 
 	//MARK: - CPU
 
@@ -23,10 +39,12 @@ import Observation
 	public var a: UInt16 = 0
 
 	/// The value pointed to by ``a``.
-	@ObservationIgnored @inlinable @inline(__always)
 	public var m: UInt16 {
-		_read { yield ram[a] }
-		_modify { yield &ram[a] }
+		//FIXME: Coroutine accessors and @ObservationIgnored: crashes the compiler without, errors with
+//		_read { yield _ram[Int(a)] }
+//		_modify { yield &_ram[Int(a)] }
+		get { _ram[Int(a)] }
+		set { _ram[Int(a)] = newValue }
 	}
 
 	/// The instruction to be executed.
@@ -44,7 +62,9 @@ import Observation
 			flags.formUnion(.a)
 			pc += 1
 		case false:
-			let o = VirtualMachine.alu(instruction, with: x, y, flags: &flags)
+			let o = VirtualMachine.alu(instruction, with: x, y)
+			flags.formUnion(o == 0 ? .zr : .none)
+			flags.formUnion(o < 0 ? .ng : .none)
 			let result = UInt16(bitPattern: o)
 
 			if (instruction.m) {
@@ -77,8 +97,7 @@ import Observation
 	/// The current result of the ALU.
 	@inlinable @inline(__always)
 	public var o: Int16 {
-		var tmp = CycleFlags.none
-		return VirtualMachine.alu(instruction, with: x, y, flags: &tmp)
+		VirtualMachine.alu(instruction, with: x, y)
 	}
 
 	/// The first operand of the current instruction.
@@ -104,6 +123,26 @@ import Observation
 	public var ng: Bool {
 		flags.contains(.ng)
 	}
+	
+	/// Calculates the X operand of the ALU operation.
+	///
+	/// - Parameters:
+	///   - instruction: The instruction to compute.
+	///   - x: The operand to calculate.
+	@inlinable public static func alu(_ instruction: Instruction, x: inout Int16) {
+		x = instruction.zx ? 0 : x
+		x = instruction.nx ? ~x : x
+	}
+
+	/// Calculates the Y operand of the ALU operation.
+	///
+	/// - Parameters:
+	///   - instruction: The instruction to compute.
+	///   - x: The operand to calculate.
+	@inlinable public static func alu(_ instruction: Instruction, y: inout Int16) {
+		y = instruction.zy ? 0 : y
+		y = instruction.ny ? ~y : y
+	}
 
 	/// Simulates an ALU operation, assumes a computation instruction.
 	///
@@ -111,9 +150,8 @@ import Observation
 	///   - instruction: The instruction to compute.
 	///   - x: The first operand.
 	///   - y: The second operand.
-	///   - flags: The receiver for the ``zr`` and ``ng`` flags.
 	/// - Returns: The result of the operation.
-	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16, flags: inout CycleFlags) -> Int16 {
+	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16) -> Int16 {
 		var x = instruction.zx ? 0 : x
 		x = instruction.nx ? ~x : x
 
@@ -123,33 +161,23 @@ import Observation
 		var o = instruction.f ? x+y : x&y;
 		o = instruction.no ? ~o : o
 
-		flags.formUnion(o == 0 ? .zr : .none)
-		flags.formUnion(o < 0 ? .ng : .none)
-
 		return o
 	}
 
 	//MARK: - Memory
 
+	internal var _rom: [UInt16]
+
 	/// The read-only memory of the computer
-	public var rom = VirtualMemory()
-
-	/// The read-write memory of the computer
-	public var ram = VirtualMemory()
-
-	//MARK: - IO
-
-	/// The keyboard register.
-	@ObservationIgnored @inlinable @inline(__always)
-	public var screen: ArraySlice<UInt16> {
-		ram.storage[16384..<24576]
+	@inlinable public var rom : VirtualROM {
+		VirtualROM(of: self)
 	}
 
-	/// The keyboard register.
-	@ObservationIgnored @inlinable @inline(__always)
-	public var keyboard: UInt16 {
-		_read { yield ram[24576] }
-		_modify { yield &ram[24576] }
+	internal var _ram: [UInt16]
+
+	/// The read-write memory of the computer
+	@inlinable public var ram: VirtualRAM {
+		VirtualRAM(of: self)
 	}
 
 }
