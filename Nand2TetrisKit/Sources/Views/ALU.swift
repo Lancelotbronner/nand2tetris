@@ -58,6 +58,8 @@ public struct ALU: View {
 				Text("= \(binary(vm.result))")
 			}
 			.frame(maxWidth: .infinity, alignment: .center)
+			Text(vm.instruction.computation.description)
+				.frame(maxWidth: .infinity, alignment: .center)
 		}
 		.monospaced()
 	}
