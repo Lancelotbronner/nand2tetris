@@ -20,11 +20,13 @@ public struct Machine: View {
 					ROM()
 				}
 			}
+			.frame(width: 280)
 			Form {
 				Section("RAM") {
 					RAM()
 				}
 			}
+			.frame(width: 200)
 			VStack {
 				Form {
 					Section("SCREEN") {

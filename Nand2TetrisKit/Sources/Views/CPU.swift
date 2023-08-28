@@ -17,14 +17,15 @@ public struct CPU: View {
 		@Bindable var vm = vm
 		HStack {
 			Register("PC", value: $vm.pc)
-			Register("A", value: $vm.a)
-		}
-		.textFieldStyle(.roundedBorder)
-		HStack {
-			Register("M", value: $vm.m)
 			Register("D", value: $vm.d)
 		}
 		.textFieldStyle(.roundedBorder)
+		HStack {
+			Register("A", value: $vm.a)
+			Register("M", value: $vm.m)
+		}
+		.textFieldStyle(.roundedBorder)
+		vm.instruction.body
 	}
 }
 

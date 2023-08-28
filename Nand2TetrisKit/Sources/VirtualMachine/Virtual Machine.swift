@@ -62,7 +62,7 @@ import Observation
 			flags.formUnion(.a)
 			pc += 1
 		case false:
-			let o = VirtualMachine.alu(instruction, with: x, y)
+			let o = o
 			flags.formUnion(o == 0 ? .zr : .none)
 			flags.formUnion(o < 0 ? .ng : .none)
 			let result = UInt16(bitPattern: o)
@@ -91,26 +91,51 @@ import Observation
 
 	//MARK: - ALU
 
-	/// Information about the side effects of the previous cycle.
-	public var flags = CycleFlags.none
-
-	/// The current result of the ALU.
-	@inlinable @inline(__always)
-	public var o: Int16 {
-		VirtualMachine.alu(instruction, with: x, y)
-	}
-
-	/// The first operand of the current instruction.
-	@inlinable @inline(__always)
-	public var x: Int16 {
+	/// The first operand of the current instruction, always the ``d`` register.
+	@inlinable public var x: Int16 {
 		Int16(bitPattern: d)
 	}
 
-	/// The second operand of the current instruction.
-	@inlinable @inline(__always)
-	public var y: Int16 {
-		Int16(bitPattern: instruction.isIndirect ? m : a)
+	/// The first operand of the current ALU operation, with ``Instruction/zx`` and ``Instruction/nx`` applied.
+	@inlinable public var lhs: Int16 {
+		var x = x
+		x = instruction.zx ? 0 : x
+		x = instruction.nx ? ~x : x
+		return x
 	}
+
+	/// The second operand of the current instruction, either the ``a`` or ``m`` register according to ``Instruction/i``.
+	@inlinable public var y: Int16 {
+		Int16(bitPattern: instruction.i ? m : a)
+	}
+
+	/// The second operand of the current ALU operation, with ``Instruction/zy`` and ``Instruction/ny`` applied.
+	@inlinable public var rhs: Int16 {
+		var y = y
+		y = instruction.zy ? 0 : y
+		y = instruction.ny ? ~y : y
+		return y
+	}
+
+	/// The character of the current ALU operation, either `+` or `&` according to ``Instruction/f``.
+	@inlinable public var op: Character {
+		instruction.f ? "+" : "&"
+	}
+
+	/// The result of the current ALU operation **before** applying ``Instruction/no``.
+	@inlinable public var result: Int16 {
+		instruction.f ? lhs + rhs : lhs & rhs;
+	}
+
+	/// The current result of the ALU.
+	@inlinable public var o: Int16 {
+		instruction.no ? ~result : result
+	}
+
+	//MARK: - Flags
+
+	/// Information about the side effects of the previous cycle.
+	public var flags = CycleFlags.none
 
 	/// Wether the ALU resulted in a zero
 	@inlinable @inline(__always)
@@ -122,46 +147,6 @@ import Observation
 	@inlinable @inline(__always)
 	public var ng: Bool {
 		flags.contains(.ng)
-	}
-	
-	/// Calculates the X operand of the ALU operation.
-	///
-	/// - Parameters:
-	///   - instruction: The instruction to compute.
-	///   - x: The operand to calculate.
-	@inlinable public static func alu(_ instruction: Instruction, x: inout Int16) {
-		x = instruction.zx ? 0 : x
-		x = instruction.nx ? ~x : x
-	}
-
-	/// Calculates the Y operand of the ALU operation.
-	///
-	/// - Parameters:
-	///   - instruction: The instruction to compute.
-	///   - x: The operand to calculate.
-	@inlinable public static func alu(_ instruction: Instruction, y: inout Int16) {
-		y = instruction.zy ? 0 : y
-		y = instruction.ny ? ~y : y
-	}
-
-	/// Simulates an ALU operation, assumes a computation instruction.
-	///
-	/// - Parameters:
-	///   - instruction: The instruction to compute.
-	///   - x: The first operand.
-	///   - y: The second operand.
-	/// - Returns: The result of the operation.
-	@inlinable public static func alu(_ instruction: Instruction, with x: Int16, _ y: Int16) -> Int16 {
-		var x = instruction.zx ? 0 : x
-		x = instruction.nx ? ~x : x
-
-		var y = instruction.zy ? 0 : y
-		y = instruction.ny ? ~y : y
-
-		var o = instruction.f ? x+y : x&y;
-		o = instruction.no ? ~o : o
-
-		return o
 	}
 
 	//MARK: - Memory
