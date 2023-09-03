@@ -55,10 +55,9 @@ internal struct MachineToolbar: ToolbarContent {
 
 	private func simulate() {
 		guard simulating == nil else { return }
-		simulating = Task {
+		simulating = Task.detached(priority: .background) {
 			while !Task.isCancelled {
 				vm.cycle()
-				await Task.yield()
 			}
 		}
 	}
@@ -66,6 +65,20 @@ internal struct MachineToolbar: ToolbarContent {
 	private func pause() {
 		simulating?.cancel()
 		simulating = nil
+	}
+
+	private func toggleSimulation() {
+		(simulating == nil ? simulate : pause)()
+	}
+
+	private func reset() {
+		Task {
+			pause()
+			await simulating?.value
+			vm.pc = 0
+			vm.a = 0
+			vm.d = 0
+		}
 	}
 
 	var body: some ToolbarContent {
@@ -80,12 +93,16 @@ internal struct MachineToolbar: ToolbarContent {
 		}
 		ToolbarItem(placement: .primaryAction) {
 			ControlGroup("Simulation") {
-				Button(action: pause) {
-					Label("Stop", systemImage: "stop.fill")
+				Button(action: reset) {
+					Label("Reset", systemImage: "stop.fill")
 				}
-				.disabled(simulating == nil)
-				Button(action: simulate) {
-					Label("Run", systemImage: "play.fill")
+				.disabled(vm.pc == 0 && vm.a == 0 && vm.d == 0)
+				Button(action: toggleSimulation) {
+					if simulating == nil {
+						Label("Run", systemImage: "play.fill")
+					} else {
+						Label("Pause", systemImage: "pause.fill")
+					}
 				}
 			}
 		}

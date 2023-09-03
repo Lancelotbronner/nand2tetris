@@ -40,6 +40,14 @@ I want to rename the *Nand2Tetris* app to *Hack Emulator* and move the virtual m
 
 I want to add a command-line program named *nand2tetris*. I want all CLI programs to go through it as a subcommand.
 
+### New Features in Hack Emulator
+
+- Load ROM/snapshot. Save ROM/snapshot/screenshot
+- Customizable toolbar
+- Global format picker for registers & RAM. Select between signed, unsigned, hexadecimal and binary
+- Clear RAM & ROM commands
+- `CMD+L` Goto command, either in RAM `ram <number>`, ROM `rom <number>`, both `<number>` or special addresses. `screen`, `keyboard`, etc.
+
 ### Assembler
 
 I want to add an assembly parser and hack code generator to *Nand2TetrisKit* and let the ROM document just assemble files on the go.
