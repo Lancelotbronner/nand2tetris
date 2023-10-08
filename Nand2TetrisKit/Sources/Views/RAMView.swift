@@ -8,7 +8,7 @@
 #if canImport(SwiftUI)
 import SwiftUI
 
-public struct RAM: View {
+public struct RAMView: View {
 	@Environment(\.defaultRegisterStyle) private var defaultStyle
 	@Environment(\.pedantic) private var pedantic
 	@State private var goto: UInt16?
@@ -59,7 +59,7 @@ internal struct CellRAM: View {
 	vm.ram.randomize()
 	return Form {
 		Section("RAM") {
-			RAM()
+			RAMView()
 		}
 	}
 	.environment(vm)

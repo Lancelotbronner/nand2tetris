@@ -15,9 +15,13 @@ This package provides an API for the Hack architecture, assembly and virtual mac
 It also provides standard documents for assembly, ROMs and virtual machine snapshots to
 allow easier interop between projects.
 
-### Nand2Tetris
+### nand2tetris
 
-This app contains the CPU emulator.
+This (not started) package will eventually contain the CLI interface of Nand2TetrisKit. 
+
+### HackEmulator
+
+This app contains the Hack emulator.
 
 #### Features
 
@@ -28,15 +32,13 @@ This app contains the CPU emulator.
 - All registers at a glance, even pseudo-register `M`
 - View any register as unsigned, signed, hex, binary or assembly
 - Current instruction and its decoded flags
-- ALU operands and intermediate value, both in decimal and binary
+- Fully deconstructed ALU operations, both in decimal and binary
 
 ![Screenshot of the CPU emulator](Assets/HackEmulator.png)
 
 ## Roadmap
 
 ### Project reorganization
-
-I want to rename the *Nand2Tetris* app to *Hack Emulator* and move the virtual machine view code from *Nand2TetrisKit* to it.
 
 I want to add a command-line program named *nand2tetris*. I want all CLI programs to go through it as a subcommand.
 

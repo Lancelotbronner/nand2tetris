@@ -16,11 +16,11 @@
 
 /* Begin PBXFileReference section */
 		730150182A7973C900FA588D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		733B047F2978B60900B91D98 /* Nand2Tetris.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nand2Tetris.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		733B047F2978B60900B91D98 /* HackEmulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HackEmulator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		733B04822978B60900B91D98 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		733B04842978B60900B91D98 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		733B04862978B60A00B91D98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		733B04882978B60A00B91D98 /* Nand2Tetris.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nand2Tetris.entitlements; sourceTree = "<group>"; };
+		733B04882978B60A00B91D98 /* HackEmulator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HackEmulator.entitlements; sourceTree = "<group>"; };
 		733B048A2978B60A00B91D98 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -39,7 +39,7 @@
 		733B04762978B60900B91D98 = {
 			isa = PBXGroup;
 			children = (
-				733B04812978B60900B91D98 /* Nand2Tetris */,
+				733B04812978B60900B91D98 /* HackEmulator */,
 				733B04802978B60900B91D98 /* Products */,
 				733B04922978B64D00B91D98 /* Frameworks */,
 			);
@@ -48,22 +48,22 @@
 		733B04802978B60900B91D98 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				733B047F2978B60900B91D98 /* Nand2Tetris.app */,
+				733B047F2978B60900B91D98 /* HackEmulator.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		733B04812978B60900B91D98 /* Nand2Tetris */ = {
+		733B04812978B60900B91D98 /* HackEmulator */ = {
 			isa = PBXGroup;
 			children = (
+				733B04882978B60A00B91D98 /* HackEmulator.entitlements */,
 				730150182A7973C900FA588D /* Info.plist */,
 				733B04822978B60900B91D98 /* App.swift */,
 				733B04842978B60900B91D98 /* ContentView.swift */,
 				733B04862978B60A00B91D98 /* Assets.xcassets */,
-				733B04882978B60A00B91D98 /* Nand2Tetris.entitlements */,
 				733B04892978B60A00B91D98 /* Preview Content */,
 			);
-			path = Nand2Tetris;
+			path = HackEmulator;
 			sourceTree = "<group>";
 		};
 		733B04892978B60A00B91D98 /* Preview Content */ = {
@@ -84,9 +84,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		733B047E2978B60900B91D98 /* Nand2Tetris */ = {
+		733B047E2978B60900B91D98 /* HackEmulator */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 733B048E2978B60A00B91D98 /* Build configuration list for PBXNativeTarget "Nand2Tetris" */;
+			buildConfigurationList = 733B048E2978B60A00B91D98 /* Build configuration list for PBXNativeTarget "HackEmulator" */;
 			buildPhases = (
 				733B047B2978B60900B91D98 /* Sources */,
 				733B047C2978B60900B91D98 /* Frameworks */,
@@ -96,12 +96,12 @@
 			);
 			dependencies = (
 			);
-			name = Nand2Tetris;
+			name = HackEmulator;
 			packageProductDependencies = (
 				7376E7C92A78DFE000928A38 /* Nand2TetrisKit */,
 			);
 			productName = Nand2Tetris;
-			productReference = 733B047F2978B60900B91D98 /* Nand2Tetris.app */;
+			productReference = 733B047F2978B60900B91D98 /* HackEmulator.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -119,7 +119,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 733B047A2978B60900B91D98 /* Build configuration list for PBXProject "Nand2Tetris" */;
+			buildConfigurationList = 733B047A2978B60900B91D98 /* Build configuration list for PBXProject "HackEmulator" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -128,11 +128,13 @@
 				Base,
 			);
 			mainGroup = 733B04762978B60900B91D98;
+			packageReferences = (
+			);
 			productRefGroup = 733B04802978B60900B91D98 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				733B047E2978B60900B91D98 /* Nand2Tetris */,
+				733B047E2978B60900B91D98 /* HackEmulator */,
 			);
 		};
 /* End PBXProject section */
@@ -282,16 +284,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Nand2Tetris/Nand2Tetris.entitlements;
+				CODE_SIGN_ENTITLEMENTS = HackEmulator/HackEmulator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"Nand2Tetris/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"HackEmulator/Preview Content\"";
 				DEVELOPMENT_TEAM = ULLNL4MHTP;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Nand2Tetris/Info.plist;
+				INFOPLIST_FILE = HackEmulator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hack Emulator";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -307,7 +311,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.lancelotbronner.Nand2Tetris;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.lancelotbronner.nand2tetris.hack-emulator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -322,16 +326,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Nand2Tetris/Nand2Tetris.entitlements;
+				CODE_SIGN_ENTITLEMENTS = HackEmulator/HackEmulator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"Nand2Tetris/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"HackEmulator/Preview Content\"";
 				DEVELOPMENT_TEAM = ULLNL4MHTP;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Nand2Tetris/Info.plist;
+				INFOPLIST_FILE = HackEmulator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hack Emulator";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -347,7 +353,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.lancelotbronner.Nand2Tetris;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.lancelotbronner.nand2tetris.hack-emulator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -360,7 +366,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		733B047A2978B60900B91D98 /* Build configuration list for PBXProject "Nand2Tetris" */ = {
+		733B047A2978B60900B91D98 /* Build configuration list for PBXProject "HackEmulator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				733B048C2978B60A00B91D98 /* Debug */,
@@ -369,7 +375,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		733B048E2978B60A00B91D98 /* Build configuration list for PBXNativeTarget "Nand2Tetris" */ = {
+		733B048E2978B60A00B91D98 /* Build configuration list for PBXNativeTarget "HackEmulator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				733B048F2978B60A00B91D98 /* Debug */,

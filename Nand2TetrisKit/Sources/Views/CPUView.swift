@@ -8,7 +8,7 @@
 #if canImport(SwiftUI)
 import SwiftUI
 
-public struct CPU: View {
+public struct CPUView: View {
 	@Environment(VirtualMachine.self) private var vm
 
 	public init() { }
@@ -33,7 +33,7 @@ public struct CPU: View {
 	let vm = VirtualMachine()
 	vm.rom[0] = Instruction(assign: .notY, to: .d, jump: .jmp).rawValue
 	return Form {
-		CPU()
+		CPUView()
 	}
 	.environment(vm)
 	.formStyle(.grouped)

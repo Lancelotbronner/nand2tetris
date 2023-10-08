@@ -23,7 +23,7 @@ public struct Machine: View {
 			.frame(width: 280)
 			Form {
 				Section("RAM") {
-					RAM()
+					RAMView()
 				}
 			}
 			.frame(width: 200)
@@ -34,10 +34,10 @@ public struct Machine: View {
 						Keyboard()
 					}
 					Section("CPU") {
-						CPU()
+						CPUView()
 					}
 					Section("ALU") {
-						ALU()
+						ALUView()
 					}
 				}
 			}

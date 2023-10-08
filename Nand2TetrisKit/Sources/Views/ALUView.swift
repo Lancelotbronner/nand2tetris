@@ -8,7 +8,7 @@
 #if canImport(SwiftUI)
 import SwiftUI
 
-public struct ALU: View {
+public struct ALUView: View {
 	@Environment(VirtualMachine.self) private var vm
 
 	public init() { }
@@ -89,7 +89,7 @@ public struct ALU: View {
 	let vm = VirtualMachine()
 	vm.rom[0] = Instruction(assign: .notY, to: .d, jump: .jmp).rawValue
 	return Form {
-		ALU()
+		ALUView()
 	}
 	.environment(vm)
 	.formStyle(.grouped)

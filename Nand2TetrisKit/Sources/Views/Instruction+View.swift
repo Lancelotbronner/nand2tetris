@@ -5,9 +5,10 @@
 //  Created by Christophe Bronner on 2023-08-28.
 //
 
+#if canImport(SwiftUI)
 import SwiftUI
 
-extension Instruction {
+extension Instruction: View {
 
 	public var body: some View {
 		HStack {
@@ -50,3 +51,4 @@ extension Instruction {
 	}
 
 }
+#endif

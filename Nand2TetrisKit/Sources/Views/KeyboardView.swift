@@ -5,6 +5,7 @@
 //  Created by Christophe Bronner on 2023-08-28.
 //
 
+#if canImport(SwiftUI)
 import SwiftUI
 
 public struct Keyboard: View {
@@ -28,3 +29,4 @@ public struct Keyboard: View {
 		}
 	}
 }
+#endif
