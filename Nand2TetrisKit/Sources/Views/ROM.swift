@@ -26,7 +26,13 @@ public struct ROM: View {
 					}
 				}
 				.textFieldStyle(.roundedBorder)
-			List(0..<32768, selection: $goto) { address in
+			MemoryView()
+		}
+	}
+
+	private struct MemoryView: View {
+		var body: some View {
+			List(0..<32768) { address in
 				CellROM(address)
 					.id(address)
 			}

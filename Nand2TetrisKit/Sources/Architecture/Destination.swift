@@ -22,14 +22,14 @@ public struct Destination: RawRepresentable, OptionSet, CaseIterable {
 	}
 
 	public static let allCases: [Destination] = [
-		.none,
+		.null,
 		.m, .d, .a,
 		.md, .am, .ad, .amd
 	]
 
 	//MARK: - Flags
 
-	public static let none = Destination([])
+	public static let null = Destination([])
 
 	public static let a = Destination(rawValue: 0x20)
 	public static let d = Destination(rawValue: 0x10)

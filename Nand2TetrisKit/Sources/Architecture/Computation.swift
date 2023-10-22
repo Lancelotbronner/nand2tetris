@@ -122,10 +122,10 @@ public struct Computation: RawRepresentable, OptionSet {
 	public static let incY = Computation(bitPattern: 0b110111)
 
 	/// `X-1`, `X--`
-	public static let decX = Computation(bitPattern: 0b110010)
+	public static let decX = Computation(bitPattern: 0b001110)
 
 	/// `Y-1`, `Y--`
-	public static let decY = Computation(bitPattern: 0b110111)
+	public static let decY = Computation(bitPattern: 0b110010)
 
 	/// `X+Y`, `add`
 	public static let add = Computation(bitPattern: 0b000010)

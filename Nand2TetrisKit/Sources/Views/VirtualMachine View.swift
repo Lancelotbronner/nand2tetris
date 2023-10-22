@@ -15,30 +15,30 @@ public struct Machine: View {
 
 	public var body: some View {
 		HStack {
-			Form {
-				Section("ROM") {
-					ROM()
-				}
+			VStack(alignment: .leading) {
+				Text("ROM")
+					.font(.headline)
+				ROM()
 			}
 			.frame(width: 280)
-			Form {
-				Section("RAM") {
-					RAMView()
-				}
+			.padding([.leading, .vertical])
+			VStack(alignment: .leading) {
+				Text("RAM")
+					.font(.headline)
+				RAMView()
 			}
 			.frame(width: 200)
-			VStack {
-				Form {
-					Section("SCREEN") {
-						Screen()
-						Keyboard()
-					}
-					Section("CPU") {
-						CPUView()
-					}
-					Section("ALU") {
-						ALUView()
-					}
+			.padding(.vertical)
+			Form {
+				Section("SCREEN") {
+					Screen()
+					Keyboard()
+				}
+				Section("CPU") {
+					CPUView()
+				}
+				Section("ALU") {
+					ALUView()
 				}
 			}
 		}

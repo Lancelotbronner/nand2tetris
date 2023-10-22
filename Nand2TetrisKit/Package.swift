@@ -20,8 +20,8 @@ let package = Package(
 			path: "Sources"
 		),
         .testTarget(
-            name: "Nand2TetrisKitTests",
-            dependencies: ["Nand2TetrisKit"]
-		),
+            name: "Nand2TetrisTests",
+			dependencies: ["Nand2TetrisKit"], 
+			path: "Tests"),
     ]
 )

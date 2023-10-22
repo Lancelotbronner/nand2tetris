@@ -25,6 +25,12 @@ public struct RAMView: View {
 					}
 				}
 				.textFieldStyle(.roundedBorder)
+			MemoryView()
+		}
+	}
+
+	private struct MemoryView: View {
+		var body: some View {
 			List(0..<32768) { address in
 				CellRAM(address)
 					.id(address)

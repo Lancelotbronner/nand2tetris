@@ -7,6 +7,8 @@
 
 public struct Instruction: RawRepresentable {
 
+	public static let nop = Instruction(assign: .zero)
+
 	public let rawValue: UInt16
 
 	public init(rawValue: UInt16) {
@@ -15,7 +17,7 @@ public struct Instruction: RawRepresentable {
 
 	//MARK: - Adressing Instruction
 
-	public init(adressing value: UInt16) {
+	public init(addressing value: UInt16) {
 		self.init(rawValue: value & 0x7FFF)
 	}
 
@@ -32,8 +34,8 @@ public struct Instruction: RawRepresentable {
 	//MARK: - Computing Instruction
 
 	@inlinable @inline(__always)
-	public init(assign computation: Computation, to destination: Destination = .none, jump: Jump = .none) {
-		self.init(rawValue: 0x8000 | computation.rawValue | destination.rawValue | jump.rawValue)
+	public init(assign computation: Computation, to destination: Destination = .null, jump: Jump = .none) {
+		self.init(rawValue: 0xE000 | computation.rawValue | destination.rawValue | jump.rawValue)
 	}
 
 	/// Wether the instruction is a computation
@@ -133,6 +135,30 @@ public struct Instruction: RawRepresentable {
 	/// Wether a computation instruction will AND operands together
 	@_transparent public var isAnd: Bool {
 		!f
+	}
+
+}
+
+extension Instruction: ExpressibleByIntegerLiteral, ExpressibleByStringLiteral {
+
+	public init(integerLiteral value: UInt16) {
+		self.init(rawValue: value)
+	}
+
+	public init(stringLiteral value: String) {
+		self.init(value)!
+	}
+
+	public var binary: String {
+		let description = String(rawValue, radix: 2)
+		let padding = String(repeating: "0", count: 16 - description.count)
+		return padding + description
+	}
+
+	public var hex: String {
+		let description = String(rawValue, radix: 16)
+		let padding = String(repeating: "0", count: 4 - description.count)
+		return padding + description
 	}
 
 }

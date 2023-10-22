@@ -25,7 +25,7 @@ public struct CPUView: View {
 			Register("M", value: $vm.m)
 		}
 		.textFieldStyle(.roundedBorder)
-		vm.instruction.body
+		vm.instruction
 	}
 }
 
