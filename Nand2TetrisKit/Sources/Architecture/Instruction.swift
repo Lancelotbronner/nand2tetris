@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct Instruction: RawRepresentable {
+public struct Instruction: RawRepresentable, Hashable {
 
 	public static let nop = Instruction(assign: .zero)
 

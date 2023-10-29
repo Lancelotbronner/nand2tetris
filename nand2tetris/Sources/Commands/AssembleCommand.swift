@@ -20,26 +20,35 @@ struct AssembleCommand: ParsableCommand {
 		completion: .file(extensions: ["", "asm", "hack", "txt"]))
 	var input: [String]
 
-	@Argument(
-		help: ArgumentHelp("The assembled output file"))
-	var output: String
+	@Option(help: ArgumentHelp("The assembled output file"))
+	var output: String?
 
 	@Flag(help: ArgumentHelp("Wether to be strict with the standard"))
-	var pedantic = true
+	var pedantic = false
 
 	func run() throws {
 		let assembler = Assembler()
 		for path in input {
 			try process(path, with: assembler)
 		}
-		try assembler.finalize()
+		assembler.assemble()
 		for diagnostic in assembler.diagnostics {
-			print(diagnostic)
+			print(diagnostic.debugDescription)
 		}
 
-		let output = URL(filePath: output, directoryHint: .notDirectory)
+		let outputURL: URL
+		if let output {
+			outputURL = URL(filePath: output, directoryHint: .notDirectory)
+		} else if input.count == 1, let input = input.first {
+			outputURL = URL(filePath: input, directoryHint: .notDirectory)
+				.deletingPathExtension()
+				.appendingPathExtension("hack")
+		} else {
+			outputURL = URL(filePath: "output.hack", directoryHint: .notDirectory)
+		}
+
 		try assembler.program.withUnsafeBufferPointer { buffer in
-			try Data(buffer: buffer).write(to: output)
+			try Data(buffer: buffer).write(to: outputURL)
 		}
 	}
 
@@ -55,6 +64,8 @@ struct AssembleCommand: ParsableCommand {
 			print("Found directory which aren't currently supported '\(input)'")
 		}
 
+		assembler.file = URL(filePath: input, directoryHint: .notDirectory).lastPathComponent
+
 		if input.hasSuffix(".hack"), let data = FileManager.default.contents(atPath: input) {
 			//TODO: Support text version
 			assembler.process(data: data)
@@ -62,7 +73,7 @@ struct AssembleCommand: ParsableCommand {
 		}
 
 		let source = try String(contentsOfFile: input)
-		assembler.assemble(Substring(source))
+		assembler.process(source)
 	}
 
 }

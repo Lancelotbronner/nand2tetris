@@ -25,7 +25,27 @@ enum TestUtils {
 		FileManager.default.changeCurrentDirectoryPath(path)
 	}
 
-	static func assemble(_ file: String, pedantic: Bool) throws -> Bool {
+	static func assemble(_ source: String, pedantic: Bool) -> Assembler {
+		print("\n[ Assembly Test \(pedantic ? "(pedantic) " : "")]")
+		let assembler = Assembler(pedantic: pedantic)
+		assembler.file = "<memory>"
+
+		print("\n==> Source")
+		print(source)
+
+		assembler.process(Substring(source))
+		assembler.assemble()
+
+		print("\n==> \(assembler.diagnostics.count) diagnostics")
+		for diagnostic in assembler.diagnostics {
+			print(diagnostic.debugDescription)
+		}
+
+		print("")
+		return assembler
+	}
+
+	static func assemble(contentsOf file: String, pedantic: Bool) throws -> Bool {
 		cd()
 
 		print("\n[ Assembly Test \(pedantic ? "(pedantic) " : "")]")

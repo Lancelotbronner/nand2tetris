@@ -12,7 +12,7 @@ public final class Assembler {
 	}
 
 	public func assemble() {
-		if program.count > 32_768 {
+		if program.count > 32_768 && pedantic {
 			diagnose(AssemblyError.programTooLarge, at: 32_768)
 		}
 
@@ -40,6 +40,8 @@ public final class Assembler {
 	public private(set) var diagnostics: [Diagnostic] = []
 	public var file: String?
 	public var line = 1
+
+	//TODO: line map for diagnostics to capture the source range and add column information
 
 	public func diagnose(_ error: AssemblyError, from source: Substring? = nil, at line: Int) {
 		let diagnostic = Diagnostic(message: error, from: source, at: line, of: file)
@@ -114,6 +116,10 @@ public final class Assembler {
 		if !source.isEmpty {
 			process(line: source)
 		}
+	}
+
+	public func process(_ source: String) {
+		process(Substring(source))
 	}
 
 }
