@@ -12,7 +12,6 @@ struct ContentView: View {
 	@Environment(VirtualMachine.self) private var vm
 
     var body: some View {
-		//TODO: Add a separate fullscreen view which won't need to lag for updates in between
         Machine()
     }
 }

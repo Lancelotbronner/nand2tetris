@@ -10,6 +10,7 @@ import SwiftUI
 
 public struct Machine: View {
 	@Environment(VirtualMachine.self) private var vm
+	@State private var simulating: Task<Void, Never>?
 
 	public init() { }
 
@@ -43,19 +44,24 @@ public struct Machine: View {
 			}
 		}
 		.formStyle(.grouped)
+		.disabled(simulating != nil)
 		.toolbar {
-			MachineToolbar()
+			MachineToolbar(simulation: $simulating)
 		}
 	}
 }
 
 internal struct MachineToolbar: ToolbarContent {
 	@Environment(VirtualMachine.self) private var vm
-	@State private var simulating: Task<Void, Never>?
+	@Binding private var simulating: Task<Void, Never>?
+
+	init(simulation task: Binding<Task<Void, Never>?>) {
+		_simulating = task
+	}
 
 	private func simulate() {
 		guard simulating == nil else { return }
-		simulating = Task.detached(priority: .background) {
+		simulating = Task.detached(priority: .low) {
 			while !Task.isCancelled {
 				vm.cycle()
 			}
@@ -72,9 +78,10 @@ internal struct MachineToolbar: ToolbarContent {
 	}
 
 	private func reset() {
-		Task {
-			pause()
+		Task.detached(priority: .high) {
+			simulating?.cancel()
 			await simulating?.value
+			simulating = nil
 			vm.pc = 0
 			vm.a = 0
 			vm.d = 0
@@ -89,6 +96,7 @@ internal struct MachineToolbar: ToolbarContent {
 				Button(action: vm.cycle) {
 					Label("Step", systemImage: "arrow.turn.up.right")
 				}
+				.disabled(simulating != nil)
 			}
 		}
 		ToolbarItem(placement: .primaryAction) {
