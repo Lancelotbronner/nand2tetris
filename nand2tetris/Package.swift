@@ -10,14 +10,14 @@ let package = Package(
 	],
 	dependencies: [
 		.package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
-		.package(path: "../Nand2TetrisKit"),
+		.package(name: "swift-nand2tetris", path: "../CoreNand2Tetris"),
 	],
     targets: [
 		.executableTarget(
 			name: "nand2tetris",
 			dependencies: [
 				.product(name: "ArgumentParser", package: "swift-argument-parser"),
-				"Nand2TetrisKit"
+				.product(name: "Nand2Tetris", package: "swift-nand2tetris"),
 			],
 			path: "Sources")
     ]

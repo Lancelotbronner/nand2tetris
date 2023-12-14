@@ -5,15 +5,18 @@
       location = "group:README.md">
    </FileRef>
    <FileRef
-      location = "group:Assets">
-   </FileRef>
-   <FileRef
-      location = "group:Nand2TetrisKit">
+      location = "group:CoreNand2Tetris">
    </FileRef>
    <FileRef
       location = "group:nand2tetris">
    </FileRef>
    <FileRef
-      location = "group:/Users/lancelot/Developer/System/Hack/Nand2Tetris Suite/HackEmulator.xcodeproj">
+      location = "group:Nand2TetrisKit">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/lancelot/Developer/System/Hack/Nand2Tetris/Nand2TetrisApp/Nand2Tetris.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Assets">
    </FileRef>
 </Workspace>

@@ -7,7 +7,7 @@
 
 import Foundation
 import ArgumentParser
-import Nand2TetrisKit
+import Nand2Tetris
 
 struct AssembleCommand: ParsableCommand {
 
@@ -23,7 +23,7 @@ struct AssembleCommand: ParsableCommand {
 	@Option(help: ArgumentHelp("The assembled output file"))
 	var output: String?
 
-	@Flag(help: ArgumentHelp("Wether to be strict with the standard"))
+	@Flag(help: ArgumentHelp("Whether to be strict with the standard"))
 	var pedantic = false
 
 	func run() throws {
@@ -56,12 +56,12 @@ struct AssembleCommand: ParsableCommand {
 		var directory: ObjCBool = false
 		let exists = FileManager.default.fileExists(atPath: input, isDirectory: &directory)
 		guard exists else {
-			print("Input '\(input)' does not exist")
-			return
+			throw ValidationError("Input '\(input)' does not exist")
 		}
 
 		if directory.boolValue {
-			print("Found directory which aren't currently supported '\(input)'")
+			print("Input '\(input)' is a directory which isn't currently supported")
+			return
 		}
 
 		assembler.file = URL(filePath: input, directoryHint: .notDirectory).lastPathComponent

@@ -8,20 +8,24 @@ and a set of Swift command-line programs to offer a more standard development ex
 
 ## Projects
 
-### Nand2TetrisKit
+### CoreNand2Tetris
 
 This package provides an API for the Hack architecture, assembly and virtual machine.
 
 It also provides standard documents for assembly, ROMs and virtual machine snapshots to
 allow easier interop between projects.
 
+### Nand2TetrisKit
+
+This package provides integration between `CoreNand2Tetris` and other frameworks, such as SwiftUI views.
+
 ### nand2tetris
 
 This (not started) package will eventually contain the CLI interface of Nand2TetrisKit. 
 
-### HackEmulator
+### Nand2Tetris
 
-This app contains the Hack emulator.
+The companion app, built with SwiftUI.
 
 #### Features
 
@@ -52,4 +56,4 @@ I want to add a command-line program named *nand2tetris*. I want all CLI program
 
 ### Assembler
 
-I want to add an assembly parser and hack code generator to *Nand2TetrisKit* and let the ROM document just assemble files on the go.
+I want to add an assembly parser and hack code generator to *CoreNand2Tetris* and let the ROM document just assemble files on the go.

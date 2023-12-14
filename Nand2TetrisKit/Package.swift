@@ -9,19 +9,17 @@ let package = Package(
 		.macOS(.v14),
 	],
     products: [
-        .library(
-            name: "Nand2TetrisKit",
-            targets: ["Nand2TetrisKit"]
-		),
+        .library(name: "Nand2TetrisKit", targets: ["Nand2TetrisKit"]),
     ],
+	dependencies: [
+		.package(name: "swift-nand2tetris", path: "../CoreNand2Tetris"),
+	],
     targets: [
         .target(
             name: "Nand2TetrisKit",
-			path: "Sources"
-		),
-        .testTarget(
-            name: "Nand2TetrisTests",
-			dependencies: ["Nand2TetrisKit"], 
-			path: "Tests"),
+			dependencies: [
+				.product(name: "Nand2Tetris", package: "swift-nand2tetris"),
+			],
+			path: "Sources"),
     ]
 )
