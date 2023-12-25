@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct VirtualSnapshot {
+public struct EmulatorSnapshot {
 
 	public init() {
 		title = ""
@@ -17,7 +17,7 @@ public struct VirtualSnapshot {
 	}
 
 	@available(macOS 14, *)
-	public init(_ title: String, of vm: VirtualMachine) {
+	public init(_ title: String, of vm: ObservableHackEmulator) {
 		self.title = title
 		pc = vm.pc
 		d = vm.d
@@ -55,7 +55,7 @@ public struct VirtualSnapshot {
 #if canImport(Foundation)
 import Foundation
 
-extension VirtualSnapshot {
+extension EmulatorSnapshot {
 
 	@available(macOS 14, *)
 	public init(_ data: Data) {
@@ -68,14 +68,14 @@ extension VirtualSnapshot {
 		pc = data.consume() ?? 0
 		d = data.consume() ?? 0
 		a = data.consume() ?? 0
-		rom = data.consume(VirtualMachine.memory)
-		ram = data.consume(VirtualMachine.memory)
+		rom = data.consume(ObservableHackEmulator.memory)
+		ram = data.consume(ObservableHackEmulator.memory)
 	}
 
 	@available(macOS 14, *)
 	public var data: Data {
 		var data = Data()
-		data.reserveCapacity(VirtualMachine.memory * 2 + 6 + title.count * 2)
+		data.reserveCapacity(ObservableHackEmulator.memory * 2 + 6 + title.count * 2)
 		if let title = title.data(using: .utf8) {
 			data.append(title)
 		}

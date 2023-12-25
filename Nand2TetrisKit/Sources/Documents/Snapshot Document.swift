@@ -14,9 +14,9 @@ import UniformTypeIdentifiers
 public struct SnapshotDocument: FileDocument {
 	public static var readableContentTypes: [UTType] = [.snapshotN2T]
 
-	public let snapshot: VirtualSnapshot
+	public let snapshot: EmulatorSnapshot
 
-	public init(_ snapshot: VirtualSnapshot) {
+	public init(_ snapshot: EmulatorSnapshot) {
 		self.snapshot = snapshot
 	}
 
@@ -24,7 +24,7 @@ public struct SnapshotDocument: FileDocument {
 		guard let data = configuration.file.regularFileContents else {
 			throw CocoaError(.fileReadCorruptFile)
 		}
-		snapshot = VirtualSnapshot(data)
+		snapshot = EmulatorSnapshot(data)
 	}
 	
 	public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {

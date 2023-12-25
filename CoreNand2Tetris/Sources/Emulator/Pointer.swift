@@ -6,12 +6,12 @@
 //
 
 @available(macOS 14, *)
-public struct VirtualPointer: Identifiable {
+public struct PointerEmulator: Identifiable {
 
-	public let vm: VirtualMachine
+	public let vm: ObservableHackEmulator
 	public let id: Int
 
-	@usableFromInline init(_ offset: Int, in vm: VirtualMachine) {
+	@usableFromInline init(_ offset: Int, in vm: ObservableHackEmulator) {
 		self.vm = vm
 		self.id = offset
 	}
@@ -31,7 +31,7 @@ public struct VirtualPointer: Identifiable {
 import Foundation
 
 @available(macOS 14, *)
-extension VirtualPointer {
+extension PointerEmulator {
 
 	public struct ParseStrategy: Foundation.ParseStrategy {
 		public var pedantic: Bool
@@ -136,7 +136,7 @@ extension VirtualPointer {
 @available(macOS 14, *)
 extension FormatStyle where FormatInput == UInt16, FormatOutput == String {
 
-	public static var assembly: VirtualPointer.AssemblyFormat { .init(pedantic: false) }
+	public static var assembly: PointerEmulator.AssemblyFormat { .init(pedantic: false) }
 
 }
 

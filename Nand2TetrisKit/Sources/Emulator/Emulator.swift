@@ -10,8 +10,8 @@ import Nand2Tetris
 #if canImport(SwiftUI)
 import SwiftUI
 
-public struct Machine: View {
-	@Environment(VirtualMachine.self) private var vm
+public struct HackEmulatorView: View {
+	@Environment(ObservableHackEmulator.self) private var vm
 	@State private var simulating: Task<Void, Never>?
 
 	public init() { }
@@ -54,7 +54,7 @@ public struct Machine: View {
 }
 
 internal struct MachineToolbar: ToolbarContent {
-	@Environment(VirtualMachine.self) private var vm
+	@Environment(ObservableHackEmulator.self) private var vm
 	@Binding private var simulating: Task<Void, Never>?
 
 	init(simulation task: Binding<Task<Void, Never>?>) {
@@ -120,10 +120,10 @@ internal struct MachineToolbar: ToolbarContent {
 }
 
 #Preview {
-	let vm = VirtualMachine()
+	let vm = ObservableHackEmulator()
 	vm.rom.randomize()
 	vm.rom[4] = 0
-	return Machine()
+	return HackEmulatorView()
 		.environment(vm)
 }
 #endif

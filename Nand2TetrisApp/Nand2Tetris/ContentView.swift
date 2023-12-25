@@ -10,14 +10,14 @@ import Nand2Tetris
 import Nand2TetrisKit
 
 struct ContentView: View {
-	@Environment(VirtualMachine.self) private var vm
+	@Environment(ObservableHackEmulator.self) private var vm
 
     var body: some View {
-        Machine()
+        HackEmulatorView()
     }
 }
 
 #Preview {
 	ContentView()
-		.environment(VirtualMachine())
+		.environment(ObservableHackEmulator())
 }

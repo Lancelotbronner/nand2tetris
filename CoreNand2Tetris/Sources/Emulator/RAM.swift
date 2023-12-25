@@ -6,15 +6,15 @@
 //
 
 @available(macOS 14, *)
-public struct VirtualRAM: _VirtualMemory {
+public struct RandomAccessMemoryEmulator: _MemoryEmulator {
 
 	public static let size = 32_768
 	public static let min: UInt16 = 0
 	public static let max: UInt16 = 32_768
 
-	@usableFromInline let vm: VirtualMachine
+	@usableFromInline let vm: ObservableHackEmulator
 
-	@inlinable public init(of vm: VirtualMachine) {
+	@inlinable public init(of vm: ObservableHackEmulator) {
 		self.vm = vm
 	}
 

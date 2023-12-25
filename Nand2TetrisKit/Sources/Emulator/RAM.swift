@@ -10,11 +10,10 @@ import Nand2Tetris
 #if canImport(SwiftUI)
 import SwiftUI
 
-public struct ROM: View {
-	@Environment(VirtualMachine.self) private var vm
+public struct RAMView: View {
+	@Environment(\.defaultRegisterStyle) private var defaultStyle
 	@Environment(\.pedantic) private var pedantic
 	@State private var goto: UInt16?
-	@State private var selection: UInt16?
 
 	public init() { }
 
@@ -27,9 +26,9 @@ public struct ROM: View {
 						self.goto = nil
 					}
 				}
+				.textFieldStyle(.roundedBorder)
 			MemoryView()
 		}
-		.textFieldStyle(.roundedBorder)
 	}
 
 	private struct MemoryView: View {
@@ -40,7 +39,7 @@ public struct ROM: View {
 			ScrollView(.vertical) {
 				LazyVStack(spacing: 0) {
 					ForEach(0..<32768) { address in
-						CellROM(address, edit: $editing)
+						CellRAM(address, edit: $editing)
 							.frame(height: height)
 							.id(address)
 					}
@@ -53,9 +52,8 @@ public struct ROM: View {
 	}
 }
 
-private struct CellROM: View {
-	@Environment(VirtualMachine.self) private var vm
-	@Environment(\.pedantic) private var pedantic
+private struct CellRAM: View {
+	@Environment(ObservableHackEmulator.self) private var vm
 	@Binding private var editing: Int?
 	private let address: Int
 
@@ -65,25 +63,25 @@ private struct CellROM: View {
 	}
 
 	var body: some View {
+		@Bindable var vm = vm
 		HStack {
 			Text(address.description)
 				.frame(width: 50, alignment: .trailing)
 			if editing == address {
-				DynamicCellROM(address, edit: $editing)
+				DynamicCellRAM(address, edit: $editing)
 			} else {
-				Text(vm._rom[address], format: VirtualPointer.AssemblyFormat(pedantic: pedantic))
+				Text(vm._ram[address], format: .number)
 			}
 		}
-		.foregroundStyle(address == vm.pc ? Color.cyan : Color.primary)
+		.foregroundStyle(address == vm.a ? Color.cyan : Color.primary)
 		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 		.contentShape(Rectangle())
 		.onTapGesture { editing = address }
 	}
 }
 
-private struct DynamicCellROM: View {
-	@Environment(VirtualMachine.self) private var vm
-	@Environment(\.pedantic) private var pedantic
+private struct DynamicCellRAM: View {
+	@Environment(ObservableHackEmulator.self) private var vm
 	@FocusState private var isFocused: Bool
 	@Binding private var editing: Int?
 	private let address: Int
@@ -95,7 +93,7 @@ private struct DynamicCellROM: View {
 
 	var body: some View {
 		@Bindable var vm = vm
-		TextField("", value: $vm._rom[address], format: VirtualPointer.AssemblyFormat(pedantic: pedantic))
+		TextField("", value: $vm._ram[address], format: .number)
 			.focused($isFocused)
 			.onSubmit { editing = nil }
 			.onAppear { isFocused = true }
@@ -103,12 +101,11 @@ private struct DynamicCellROM: View {
 }
 
 #Preview {
-	let vm = VirtualMachine()
-	vm.rom.randomize()
-	vm.rom[4] = 0
+	let vm = ObservableHackEmulator()
+	vm.ram.randomize()
 	return Form {
-		Section("ROM") {
-			ROM()
+		Section("RAM") {
+			RAMView()
 		}
 	}
 	.environment(vm)

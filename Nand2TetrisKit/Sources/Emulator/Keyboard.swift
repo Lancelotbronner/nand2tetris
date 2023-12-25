@@ -11,7 +11,7 @@ import Nand2Tetris
 import SwiftUI
 
 public struct Keyboard: View {
-	@Environment(VirtualMachine.self) private var vm
+	@Environment(ObservableHackEmulator.self) private var vm
 
 	public var body: some View {
 		LabeledContent {

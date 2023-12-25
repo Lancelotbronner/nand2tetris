@@ -11,7 +11,7 @@ import Nand2Tetris
 import SwiftUI
 
 public struct ALUView: View {
-	@Environment(VirtualMachine.self) private var vm
+	@Environment(ObservableHackEmulator.self) private var vm
 
 	public init() { }
 
@@ -88,7 +88,7 @@ public struct ALUView: View {
 }
 
 #Preview {
-	let vm = VirtualMachine()
+	let vm = ObservableHackEmulator()
 	vm.rom[0] = Instruction(assign: .notY, to: .d, jump: .jmp).rawValue
 	return Form {
 		ALUView()

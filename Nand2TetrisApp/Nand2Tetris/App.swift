@@ -10,10 +10,10 @@ import Nand2Tetris
 import Nand2TetrisKit
 
 @main struct Nand2TetrisApp: App {
-	let vm: VirtualMachine
+	let vm: ObservableHackEmulator
 
 	init() {
-		vm = VirtualMachine()
+		vm = ObservableHackEmulator()
 		vm.rom[0] = 16384
 		vm.rom[1] = Instruction(assign: .y, to: .d).rawValue
 		vm.rom[2] = Instruction(assign: .x, to: .a).rawValue

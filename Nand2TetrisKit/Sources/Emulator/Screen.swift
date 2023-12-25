@@ -11,7 +11,7 @@ import Nand2Tetris
 import SwiftUI
 
 public struct Screen: View {
-	@Environment(VirtualMachine.self) private var vm
+	@Environment(ObservableHackEmulator.self) private var vm
 
 	public init() { }
 
@@ -52,7 +52,7 @@ public struct Screen: View {
 }
 
 #Preview {
-	let vm = VirtualMachine()
+	let vm = ObservableHackEmulator()
 	vm.ram.randomize()
 //	for i in 0..<256 {
 //		vm.ram.screen[vm.ram.screen.startIndex + i] = .max

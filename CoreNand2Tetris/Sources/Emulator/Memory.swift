@@ -6,15 +6,15 @@
 //
 
 @available(macOS 14, *)
-@usableFromInline protocol _VirtualMemory: RandomAccessCollection, MutableCollection where Index == Int {
+@usableFromInline protocol _MemoryEmulator: RandomAccessCollection, MutableCollection where Index == Int {
 
-	var vm: VirtualMachine { get }
+	var vm: ObservableHackEmulator { get }
 	var storage: [UInt16] { get nonmutating set }
 
 }
 
 @available(macOS 14, *)
-extension _VirtualMemory {
+extension _MemoryEmulator {
 
 	@inlinable
 	public subscript(position: Int) -> UInt16 {
@@ -30,12 +30,12 @@ extension _VirtualMemory {
 
 	@inlinable
 	public var count: Int {
-		VirtualMachine.memory
+		ObservableHackEmulator.memory
 	}
 
 	@inlinable @inline(__always)
 	public var capacity: Int {
-		VirtualMachine.memory
+		ObservableHackEmulator.memory
 	}
 
 	@inlinable @inline(__always)
@@ -45,7 +45,7 @@ extension _VirtualMemory {
 
 	@inlinable @inline(__always)
 	public var endIndex: Int {
-		VirtualMachine.memory - 1
+		ObservableHackEmulator.memory - 1
 	}
 
 	@inlinable @inline(__always)
@@ -60,7 +60,7 @@ extension _VirtualMemory {
 
 	@inlinable @inline(__always)
 	public func load(_ data: [UInt16]) {
-		for i in 0..<Swift.min(data.endIndex, VirtualMachine.memory) {
+		for i in 0..<Swift.min(data.endIndex, ObservableHackEmulator.memory) {
 			storage[i] = data[i]
 		}
 	}

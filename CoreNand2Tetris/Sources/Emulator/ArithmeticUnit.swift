@@ -6,11 +6,11 @@
 //
 
 @available(macOS 14, *)
-public struct VirtualArithmeticUnit {
+public struct ArithmeticUnitEmulator {
 
-	@usableFromInline internal let vm: VirtualMachine
+	@usableFromInline internal let vm: ObservableHackEmulator
 
-	@usableFromInline internal init(of vm: VirtualMachine) {
+	@usableFromInline internal init(of vm: ObservableHackEmulator) {
 		self.vm = vm
 	}
 

@@ -8,24 +8,24 @@
 import Observation
 
 @available(macOS 14, *)
-@Observable public final class VirtualMachine {
+@Observable public final class ObservableHackEmulator {
 
 	/// The size of the virtual machine's ROM and RAM.
 	public static let memory = 32_768
 
 	public init() {
-		_rom = .init(repeating: 0, count: VirtualMachine.memory)
-		_ram = .init(repeating: 0, count: VirtualMachine.memory)
+		_rom = .init(repeating: 0, count: ObservableHackEmulator.memory)
+		_ram = .init(repeating: 0, count: ObservableHackEmulator.memory)
 	}
 
 	public init(
-		rom: [UInt16] = Array(repeating: 0, count: VirtualMachine.memory),
-		ram: [UInt16] = Array(repeating: 0, count: VirtualMachine.memory)
+		rom: [UInt16] = Array(repeating: 0, count: ObservableHackEmulator.memory),
+		ram: [UInt16] = Array(repeating: 0, count: ObservableHackEmulator.memory)
 	) {
 		_rom = rom
 		_ram = ram
-		_rom.reserveCapacity(VirtualMachine.memory)
-		_ram.reserveCapacity(VirtualMachine.memory)
+		_rom.reserveCapacity(ObservableHackEmulator.memory)
+		_ram.reserveCapacity(ObservableHackEmulator.memory)
 	}
 
 	//MARK: - CPU
@@ -155,15 +155,15 @@ import Observation
 	public var _rom: [UInt16]
 
 	/// The read-only memory of the computer
-	@inlinable public var rom : VirtualROM {
-		VirtualROM(of: self)
+	@inlinable public var rom : ReadOnlyMemoryEmulator {
+		ReadOnlyMemoryEmulator(of: self)
 	}
 
 	public var _ram: [UInt16]
 
 	/// The read-write memory of the computer
-	@inlinable public var ram: VirtualRAM {
-		VirtualRAM(of: self)
+	@inlinable public var ram: RandomAccessMemoryEmulator {
+		RandomAccessMemoryEmulator(of: self)
 	}
 
 }
