@@ -7,15 +7,16 @@
 
 public struct VirtualFunction {
 
-	@usableFromInline let storage: ManagedBuffer<Header, Command>
+	@usableFromInline var storage: ManagedBuffer<Header, Command>!
 
 	public init(
 		_ name: String,
 		into unit: VirtualUnit,
 		args: Int = 0,
 		locals: Int = 0,
-		commands: some Collection<Command>
+		@ArrayBuilder<Command> commands: (VirtualFunction) -> [Command]
 	) {
+		let commands = commands(self)
 		storage = ManagedBuffer.create(minimumCapacity: commands.count) { _ in
 			Header(name: name, unit: unit, args: args, locals: locals, body: commands.count)
 		}
@@ -26,6 +27,7 @@ public struct VirtualFunction {
 				}
 			}
 		}
+		unit.functions.insert(self)
 	}
 
 	public init(
@@ -35,7 +37,21 @@ public struct VirtualFunction {
 		locals: Int = 0,
 		@ArrayBuilder<Command> commands: () -> [Command]
 	) {
-		self.init(name, into: unit, args: args, locals: locals, commands: commands())
+		self.init(name, into: unit, args: args, locals: locals) { _ in
+			commands()
+		}
+	}
+
+	public init(
+		_ name: String,
+		into unit: VirtualUnit,
+		args: Int = 0,
+		locals: Int = 0,
+		commands: [Command]
+	) {
+		self.init(name, into: unit, args: args, locals: locals) { _ in
+			commands
+		}
 	}
 
 	/// The function's name

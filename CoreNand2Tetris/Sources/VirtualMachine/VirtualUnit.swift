@@ -9,11 +9,11 @@ import Observation
 
 public struct VirtualUnit {
 
-	@usableFromInline let storage: ManagedBuffer<Header, UInt16>
+	@usableFromInline let storage: ManagedBuffer<Header, Int16>
 
-	public init(_ name: String, statics: Int) {
+	public init(_ name: String, statics: Int, functions: Set<VirtualFunction> = []) {
 		storage = ManagedBuffer.create(minimumCapacity: statics) { _ in
-			Header(name: name, statics: statics)
+			Header(name: name, statics: statics, functions: functions)
 		}
 	}
 
@@ -27,7 +27,13 @@ public struct VirtualUnit {
 		storage.header.statics
 	}
 
-	public subscript(static index: Int) -> UInt16 {
+	/// This unit's functions
+	@_transparent public var functions: Set<VirtualFunction> {
+		_read { yield storage.header.functions }
+		nonmutating _modify { yield &storage.header.functions }
+	}
+
+	public subscript(static index: Int) -> Int16 {
 		@_transparent get {
 			precondition(index < storage.header.statics, "Index out of bounds")
 			return storage.withUnsafeMutablePointerToElements {
@@ -42,8 +48,15 @@ public struct VirtualUnit {
 		}
 	}
 
-	@Observable @usableFromInline final class Storage: ManagedBuffer<Header, UInt16> {
-		public subscript(_ index: Int) -> UInt16 {
+	@usableFromInline struct Header {
+		public let name: String
+		public let statics: Int
+		public var functions: Set<VirtualFunction>
+	}
+
+	@Observable @usableFromInline final class Storage: ManagedBuffer<Header, Int16> {
+
+		public subscript(_ index: Int) -> Int16 {
 			get {
 				access(keyPath: \.[index])
 				return withUnsafeMutablePointerToElements {
@@ -58,11 +71,7 @@ public struct VirtualUnit {
 				}
 			}
 		}
-	}
 
-	@usableFromInline struct Header {
-		public let name: String
-		public let statics: Int
 	}
 
 }
@@ -94,14 +103,14 @@ extension VirtualUnit: Sequence {
 	}
 
 	public struct Iterator: IteratorProtocol {
-		@usableFromInline let storage: ManagedBuffer<Header, UInt16>
+		@usableFromInline let storage: ManagedBuffer<Header, Int16>
 		@usableFromInline var i = 0
 
-		@usableFromInline init(storage: ManagedBuffer<Header, UInt16>) {
+		@usableFromInline init(storage: ManagedBuffer<Header, Int16>) {
 			self.storage = storage
 		}
 
-		@_transparent public mutating func next() -> UInt16? {
+		@_transparent public mutating func next() -> Int16? {
 			storage.withUnsafeMutablePointerToElements {
 				defer { i += 1 }
 				return $0[i]
@@ -127,7 +136,7 @@ extension VirtualUnit: Collection {
 		i + 1
 	}
 
-	public subscript(position: Int) -> UInt16 {
+	public subscript(position: Int) -> Int16 {
 		@_transparent get {
 			precondition(position < endIndex, "Index out of bounds")
 			return storage.withUnsafeMutablePointerToElements {
