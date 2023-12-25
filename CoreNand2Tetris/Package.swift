@@ -6,8 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Nand2Tetris",
 	platforms: [
-		// String.trimmingPrefix
-		.macOS(.v13),
+		.macOS(.v14),
 	],
     products: [
         .library(name: "Nand2Tetris", targets: ["Nand2Tetris"]),
