@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		736D5C832B3A358C00614682 /* Nand2TetrisCompanionKit in Frameworks */ = {isa = PBXBuildFile; productRef = 736D5C822B3A358C00614682 /* Nand2TetrisCompanionKit */; };
 		73B552082B2AB3E800F449C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73B552012B2AB3E800F449C9 /* Assets.xcassets */; };
 		73B5520A2B2AB3E800F449C9 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B552042B2AB3E800F449C9 /* App.swift */; };
-		73B552122B2AB58600F449C9 /* Nand2TetrisKit in Frameworks */ = {isa = PBXBuildFile; productRef = 73B552112B2AB58600F449C9 /* Nand2TetrisKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,7 +26,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73B552122B2AB58600F449C9 /* Nand2TetrisKit in Frameworks */,
+				736D5C832B3A358C00614682 /* Nand2TetrisCompanionKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +94,7 @@
 			);
 			name = Nand2TetrisApp;
 			packageProductDependencies = (
-				73B552112B2AB58600F449C9 /* Nand2TetrisKit */,
+				736D5C822B3A358C00614682 /* Nand2TetrisCompanionKit */,
 			);
 			productName = Nand2Tetris;
 			productReference = 733B047F2978B60900B91D98 /* Nand2TetrisApp.app */;
@@ -381,9 +381,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		73B552112B2AB58600F449C9 /* Nand2TetrisKit */ = {
+		736D5C822B3A358C00614682 /* Nand2TetrisCompanionKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Nand2TetrisKit;
+			productName = Nand2TetrisCompanionKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

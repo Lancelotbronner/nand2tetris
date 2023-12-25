@@ -8,45 +8,68 @@ and a set of Swift command-line programs to offer a more standard development ex
 
 ## Projects
 
-### CoreNand2Tetris
+### Nand2Tetris
 
 This package provides an API for the Hack architecture, assembly and virtual machine.
 
 It also provides standard documents for assembly, ROMs and virtual machine snapshots to
 allow easier interop between projects.
 
-### Nand2TetrisKit
+The `CoreNand2Tetris` name is reserved for the potential clang module until SPM supports mixed source targets.
 
-This package provides integration between `CoreNand2Tetris` and other frameworks, such as SwiftUI views.
+### Nand2TetrisCompanionKit
+
+This package provides integration between `Nand2TetrisKit` and other frameworks, such as SwiftUI views.
 
 ### nand2tetris
 
-This (not started) package will eventually contain the CLI interface of Nand2TetrisKit. 
+This is the start of a Nand2Tetris toolchain.
+
+Most commands can be in either pedantic (`--pedantic`) or extended mode.
+Pedantic mode is strictly conformant to the book, no more no less.
+Extended mode is meant to improve quality of life when manually writing files.
+Extended mode may add new capabilities (such as the ALU's undocumented instructions) but will remain a superset of the book.
+
+#### Assembler
+
+```
+nand2tetris assemble <input> ... [--output <output>] [--pedantic]
+```
+
+Extended mode includes some quality of life features when writing assembly files along with undocumented ALU instructions.
+
+- Support lowercase and mixed case (`JGT` vs `jGt`)
+- Supports aliases (`AMD=` vs `DMA=`)
+- Supports the ALU's undocumented instructions (like `!(D&A)`, emulator only, assembly support to be added)
 
 ### Nand2Tetris
 
 The companion app, built with SwiftUI.
 
-#### Features
+#### Hack Emulator
 
 - ROM editing with assembly parsing
 - RAM editing using any base
-- Go to any ROM or RAM address easily
+- Jump to any ROM or RAM address
 - Working screen & keyboard
 - All registers at a glance, even pseudo-register `M`
-- View any register as unsigned, signed, hex, binary or assembly
-- Current instruction and its decoded flags
+- View any register or memory address as unsigned, signed, hex or binary
+- Current instruction decoded
 - Fully deconstructed ALU operations, both in decimal and binary
 
 ![Screenshot of the CPU emulator](Assets/HackEmulator.png)
 
 ## Roadmap
 
-### Project reorganization
+### Virtual Machine
 
-I want to add a command-line program named *nand2tetris*. I want all CLI programs to go through it as a subcommand.
+I'm adding support for the virtual machine (`.vm` files) and its corresponding translator (`.vm` => `.hack`) to `Nand2Tetris`.
 
-### New Features in Hack Emulator
+### Test Module
+
+I want to add support for automatically executing test files (`.tst`, `.cmp`, `.out`) within `XCTNand2Tetris`.
+
+### Hack Emulator
 
 - Load ROM/snapshot. Save ROM/snapshot/screenshot
 - Customizable toolbar
@@ -56,4 +79,8 @@ I want to add a command-line program named *nand2tetris*. I want all CLI program
 
 ### Assembler
 
-I want to add an assembly parser and hack code generator to *CoreNand2Tetris* and let the ROM document just assemble files on the go.
+I want to add undocumented and raw instruction support to the assembler.
+
+### Companion App
+
+I've started GUIs for the assembler and virtual machine. 

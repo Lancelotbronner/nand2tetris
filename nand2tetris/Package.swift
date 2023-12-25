@@ -17,7 +17,7 @@ let package = Package(
 			name: "nand2tetris",
 			dependencies: [
 				.product(name: "ArgumentParser", package: "swift-argument-parser"),
-				.product(name: "Nand2Tetris", package: "swift-nand2tetris"),
+				.product(name: "Nand2TetrisKit", package: "swift-nand2tetris"),
 			],
 			path: "Sources")
     ]

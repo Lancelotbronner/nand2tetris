@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import Nand2Tetris
+import Nand2TetrisKit
 
 // Conversion:
 // (\w+) (\w+) (\d+)

@@ -7,7 +7,7 @@
 
 import Foundation
 import ArgumentParser
-import Nand2Tetris
+import Nand2TetrisKit
 
 struct AssembleCommand: ParsableCommand {
 

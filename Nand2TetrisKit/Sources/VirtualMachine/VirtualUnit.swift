@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Nand2Tetris
+import Nand2TetrisKit
 
 public struct VirtualUnitCell: View {
 	private let unit: VirtualUnit

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Nand2Tetris
+import Nand2TetrisKit
 
 private let _cd = false
 

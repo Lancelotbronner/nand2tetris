@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Nand2Tetris
+import Nand2TetrisKit
 
 public struct VirtualMachineScene: Scene {
 	@State private var vm = ObservableVirtualMachine()

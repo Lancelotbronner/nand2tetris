@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Nand2Tetris
+import Nand2TetrisKit
 
 struct VirtualMachineSidebar: View {
 	@State private var tab = Tab.program

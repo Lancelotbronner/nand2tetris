@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Nand2Tetris
+import Nand2TetrisKit
 
 struct VirtualCallstackTab: View {
 	@Environment(ObservableVirtualMachine.self) private var vm

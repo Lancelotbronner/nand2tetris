@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2023-07-31.
 //
 
-import Nand2Tetris
+import Nand2TetrisKit
 
 #if canImport(SwiftUI)
 import SwiftUI

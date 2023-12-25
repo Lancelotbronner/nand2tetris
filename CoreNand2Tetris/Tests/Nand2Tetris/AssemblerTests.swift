@@ -7,7 +7,7 @@
 
 import XCTest
 import XCTNand2Tetris
-import Nand2Tetris
+import Nand2TetrisKit
 
 final class AssemblerTests: XCTestCase {
 
