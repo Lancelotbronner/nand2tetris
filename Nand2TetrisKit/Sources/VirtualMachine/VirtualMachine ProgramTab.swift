@@ -71,8 +71,8 @@ private struct ProgramByUnit: View {
 	var body: some View {
 		@Bindable var navigation = navigation
 		List(selection: $navigation.selection) {
-			ForEach(units) { unit in
-				DisclosureGroup {
+			ForEach($units) { $unit in
+				DisclosureGroup(isExpanded: $unit.isExpanded) {
 					ForEach(sort(unit.functions)) { function in
 						VirtualFunctionCell(function)
 							.tag(VirtualMachineRoute.function(function))

@@ -19,7 +19,7 @@ public struct VirtualFunctionCell: View {
 		Label {
 			VStack(alignment: .leading) {
 				Text(function.name)
-				Text("\(function.count) commands, \(function.args) arguments, \(function.locals) locals")
+				Text("\(function.locals) locals, \(function.count) commands")
 					.font(.caption)
 					.foregroundStyle(.secondary)
 			}

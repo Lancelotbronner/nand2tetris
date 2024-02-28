@@ -18,19 +18,18 @@ public struct VirtualFunction {
 	public init(
 		_ name: String,
 		into unit: VirtualUnit,
-		args: Int = 0,
 		locals: Int = 0,
 		@ArrayBuilder<Command> commands: (VirtualFunction) -> [Command]
 	) {
 		let commands = commands(VirtualFunction.null)
 		storage = ManagedBuffer.create(minimumCapacity: commands.count) { _ in
-			Header(name: name, unit: unit, args: args, locals: locals, body: commands.count)
+			Header(name: name, unit: unit, locals: locals, body: commands.count)
 		}
 		commands.withContiguousStorageIfAvailable { commands in
 			storage.withUnsafeMutablePointerToElements { storage in
 				for i in commands.indices {
 					storage[i] = switch commands[i] {
-					case let .call(function) where function.storage == nil: Command.call(self)
+					case let .call(function, args) where function.storage == nil: Command.call(self, args)
 					default: commands[i]
 					}
 				}
@@ -42,11 +41,10 @@ public struct VirtualFunction {
 	public init(
 		_ name: String,
 		into unit: VirtualUnit,
-		args: Int = 0,
 		locals: Int = 0,
 		@ArrayBuilder<Command> commands: () -> [Command]
 	) {
-		self.init(name, into: unit, args: args, locals: locals) { _ in
+		self.init(name, into: unit, locals: locals) { _ in
 			commands()
 		}
 	}
@@ -54,11 +52,10 @@ public struct VirtualFunction {
 	public init(
 		_ name: String,
 		into unit: VirtualUnit,
-		args: Int = 0,
 		locals: Int = 0,
 		commands: [Command]
 	) {
-		self.init(name, into: unit, args: args, locals: locals) { _ in
+		self.init(name, into: unit, locals: locals) { _ in
 			commands
 		}
 	}
@@ -73,11 +70,6 @@ public struct VirtualFunction {
 		storage.header.unit
 	}
 
-	/// The number of arguments required to call this function
-	@_transparent public var args: Int {
-		storage.header.args
-	}
-
 	/// The number of locals this function requires
 	@_transparent public var locals: Int {
 		storage.header.locals
@@ -86,7 +78,6 @@ public struct VirtualFunction {
 	@usableFromInline struct Header {
 		public let name: String
 		public let unit: VirtualUnit
-		public let args: Int
 		public let locals: Int
 		public let body: Int
 	}

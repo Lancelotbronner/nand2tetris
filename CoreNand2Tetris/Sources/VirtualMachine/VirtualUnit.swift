@@ -13,7 +13,7 @@ public struct VirtualUnit {
 
 	public init(_ name: String, statics: Int, functions: Set<VirtualFunction> = []) {
 		storage = ManagedBuffer.create(minimumCapacity: statics) { _ in
-			Header(name: name, statics: statics, functions: functions)
+			Header(name: name, statics: statics, expanded: false, functions: functions)
 		}
 	}
 
@@ -25,6 +25,12 @@ public struct VirtualUnit {
 	/// The number of static locations in this unit
 	@_transparent public var statics: Int {
 		storage.header.statics
+	}
+
+	/// Whether the UI is currently expanding this unit
+	@_transparent public var isExpanded: Bool {
+		_read { yield storage.header.expanded }
+		_modify { yield &storage.header.expanded }
 	}
 
 	/// This unit's functions
@@ -51,6 +57,7 @@ public struct VirtualUnit {
 	@usableFromInline struct Header {
 		public let name: String
 		public let statics: Int
+		public var expanded: Bool
 		public var functions: Set<VirtualFunction>
 	}
 

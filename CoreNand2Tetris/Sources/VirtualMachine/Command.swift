@@ -113,7 +113,7 @@ public enum Command: ExpressibleByIntegerLiteral, Hashable {
 
 	//MARK: - Function Commands
 
-	case call(_ function: VirtualFunction)
+	case call(_ function: VirtualFunction, _ args: UInt16)
 
 	case `return`
 
@@ -128,7 +128,7 @@ public enum Command: ExpressibleByIntegerLiteral, Hashable {
 			commands.append(Command.pop(.constant, offset: argument))
 			commands.append(Command.push(.argument, offset: UInt16(truncatingIfNeeded: i + 1)))
 		}
-		commands.append(Command.call(function))
+		commands.append(Command.call(function, UInt16(truncatingIfNeeded: arguments.count + 1)))
 		return commands
 	}
 

@@ -130,7 +130,7 @@ extension VirtualMachine {
 		case let .gotor(offset): goto(pc + Int(offset))
 		case let .if(offset): self.if(goto: Int(offset))
 		case let .ifr(offset): self.if(goto: pc + Int(offset))
-		case let .call(function): call(function)
+		case let .call(function, args): call(function, Int(args))
 		case .return: self.return()
 		}
 	}
@@ -211,9 +211,7 @@ extension VirtualMachine {
 	}
 
 	@_transparent public var popb: Bool {
-		get {
-			pop == Command.true
-		}
+		pop == Command.true
 	}
 
 	@_transparent public func push(_ value: Bool) {
@@ -262,19 +260,9 @@ extension VirtualMachine {
 		@_transparent set { self[heap: this + index] = newValue }
 	}
 
-	@_transparent public var this: Int16 {
-		get { self[pointer: 0] }
-		set { self[pointer: 0] = newValue }
-	}
-
 	public subscript(that index: Int) -> Int16 {
 		@_transparent get { self[heap: that + index] }
 		@_transparent set { self[heap: that + index] = newValue }
-	}
-
-	@_transparent public var that: Int16 {
-		get { self[pointer: 1] }
-		set { self[pointer: 1] = newValue }
 	}
 
 	@inlinable public subscript(pointer index: Int) -> Int16 {
@@ -329,46 +317,6 @@ extension VirtualMachine {
 			default: break
 			}
 		}
-	}
-
-	@_transparent public var temp0: Int16 {
-		get { self[temp: 0] }
-		set { self[temp: 0] = newValue }
-	}
-
-	@_transparent public var temp1: Int16 {
-		get { self[temp: 1] }
-		set { self[temp: 1] = newValue }
-	}
-
-	@_transparent public var temp2: Int16 {
-		get { self[temp: 2] }
-		set { self[temp: 2] = newValue }
-	}
-
-	@_transparent public var temp3: Int16 {
-		get { self[temp: 3] }
-		set { self[temp: 3] = newValue }
-	}
-
-	@_transparent public var temp4: Int16 {
-		get { self[temp: 4] }
-		set { self[temp: 4] = newValue }
-	}
-
-	@_transparent public var temp5: Int16 {
-		get { self[temp: 5] }
-		set { self[temp: 5] = newValue }
-	}
-
-	@_transparent public var temp6: Int16 {
-		get { self[temp: 6] }
-		set { self[temp: 6] = newValue }
-	}
-
-	@_transparent public var temp7: Int16 {
-		get { self[temp: 7] }
-		set { self[temp: 7] = newValue }
 	}
 
 	//MARK: - Arithmetic Commands
@@ -458,7 +406,7 @@ extension VirtualMachine {
 
 	//MARK: - Function Commands
 
-	@inlinable public func call(_ function: VirtualFunction) {
+	@inlinable public func call(_ function: VirtualFunction, _ args: Int) {
 		let frame = RawVirtualFrame(
 			caller: self.function,
 			callee: function,
@@ -470,9 +418,8 @@ extension VirtualMachine {
 			that: that)
 		frames.append(frame)
 		pc = 0
-		arg = stack.count - function.args
+		arg = stack.count - args
 		lcl = stack.count
-		// function <symbol> <n>
 		for _ in 0..<function.locals {
 			push(0)
 		}

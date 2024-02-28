@@ -14,7 +14,7 @@ public struct VirtualMachineScene: Scene {
 
 	public init() {
 		let unit = VirtualUnit("Fibonacci", statics: 0)
-		let function = VirtualFunction("fibonacci", into: unit, args: 1, locals: 0) {
+		let function = VirtualFunction("fibonacci", into: unit, locals: 0) {
 			Command.push(.argument, offset: 0)
 			Command.push(constant: 2)
 			Command.lt
@@ -22,28 +22,28 @@ public struct VirtualMachineScene: Scene {
 			Command.ifr(1)
 			Command.gotor(2)
 			// then:
-			Command.push(.argument, offset: 0)
+			Command.push(argument: 0)
 			Command.return
 
-			Command.push(.argument, offset: 0)
+			Command.push(argument: 0)
 			Command.push(constant: 2)
 			Command.sub
-			Command.call($0)
-			Command.push(.argument, offset: 0)
+			Command.call($0, 1)
+			Command.push(argument: 0)
 			Command.push(constant: 1)
 			Command.sub
-			Command.call($0)
+			Command.call($0, 1)
 			Command.add
 			Command.return
 		}
 		let main = VirtualFunction("Sys.init", into: unit) {
 			Command.push(constant: 4)
-			Command.call(function)
+			Command.call(function, 1)
 		}
 		vm.insert(function)
 		vm.insert(main)
 		// prime the VM
-		vm.call(main)
+		vm.call(main, 0)
 	}
 
 	public var body: some Scene {
