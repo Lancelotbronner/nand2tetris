@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2023-12-25.
 //
 
-public protocol VirtualMachine {
+public protocol VirtualMachine: AnyObject {
 
 	//MARK: - Program
 
@@ -113,7 +113,7 @@ extension VirtualMachine {
 	}
 
 	/// Executes a single instruction
-	@inlinable public mutating func execute(_ command: Command) {
+	@inlinable public func execute(_ command: Command) {
 		switch command {
 		case .add: add()
 		case .sub: sub()
@@ -136,21 +136,28 @@ extension VirtualMachine {
 	}
 
 	/// Executes a single command
-	@inlinable public mutating func step() {
-		if let command = function?[pc] {
-			execute(command)
+	@inlinable public func step() {
+		guard let function else { return }
+
+		if pc >= function.count {
+			execute(.return)
+			return
 		}
+		
+		let command = function[pc]
+		execute(command)
+		pc += 1
 	}
 
 	/// Executes the given number of commands
-	@inlinable public mutating func step(_ times: Int) {
+	@inlinable public func step(_ times: Int) {
 		for _ in 0..<times {
 			step()
 		}
 	}
 
 	/// Executes until the current function returns
-	@inlinable public mutating func executeToEndOfFunction() {
+	@inlinable public func executeToEndOfFunction() {
 		guard let function, pc < function.endIndex else { return }
 		for i in pc..<function.endIndex {
 			execute(function[i])
@@ -188,13 +195,13 @@ extension VirtualMachine {
 	}
 
 	/// Pushes a value to the global stack
-	@_transparent public mutating func push(_ value: Int16) {
+	@_transparent public func push(_ value: Int16) {
 		stack.append(value)
 	}
 
 	/// Pops a value from the global stack
 	@inlinable public var pop: Int16 {
-		mutating get {
+		get {
 			if let value = stack.last {
 				stack.removeLast()
 				return value
@@ -204,12 +211,12 @@ extension VirtualMachine {
 	}
 
 	@_transparent public var popb: Bool {
-		mutating get {
+		get {
 			pop == Command.true
 		}
 	}
 
-	@_transparent public mutating func push(_ value: Bool) {
+	@_transparent public func push(_ value: Bool) {
 		push(value ? Command.true : Command.false)
 	}
 
@@ -247,7 +254,7 @@ extension VirtualMachine {
 
 	public subscript(static index: Int) -> Int16 {
 		@_transparent get { unit?[static: index] ?? 0 }
-		@_transparent nonmutating set { unit?[static: index] = newValue }
+		@_transparent set { unit?[static: index] = newValue }
 	}
 
 	public subscript(this index: Int) -> Int16 {
@@ -366,48 +373,48 @@ extension VirtualMachine {
 
 	//MARK: - Arithmetic Commands
 
-	@inlinable public mutating func add() {
+	@inlinable public func add() {
 		push(pop &+ pop)
 	}
 
-	@inlinable public mutating func sub() {
+	@inlinable public func sub() {
 		let tmp = pop
 		push(pop &- tmp)
 	}
 
-	@inlinable public mutating func neg() {
+	@inlinable public func neg() {
 		push(-pop)
 	}
 
-	@inlinable public mutating func eq() {
+	@inlinable public func eq() {
 		push(pop == pop)
 	}
 
-	@inlinable public mutating func gt() {
+	@inlinable public func gt() {
 		let tmp = pop
 		push(pop > tmp)
 	}
 
-	@inlinable public mutating func lt() {
+	@inlinable public func lt() {
 		let tmp = pop
 		push(pop < tmp)
 	}
 
-	@inlinable public mutating func and() {
+	@inlinable public func and() {
 		push(pop & pop)
 	}
 
-	@inlinable public mutating func or() {
+	@inlinable public func or() {
 		push(pop | pop)
 	}
 
-	@inlinable public mutating func not() {
+	@inlinable public func not() {
 		push(~pop)
 	}
 
 	//MARK: - Memory Commands
 
-	@inlinable public mutating func push(_ segment: MemorySegment, offset: Int) {
+	@inlinable public func push(_ segment: MemorySegment, offset: Int) {
 		let value = switch segment {
 		case .argument: self[argument: offset]
 		case .local: self[local: offset]
@@ -421,7 +428,7 @@ extension VirtualMachine {
 		push(value)
 	}
 
-	@inlinable public mutating func pop(_ segment: MemorySegment, offset: Int) {
+	@inlinable public func pop(_ segment: MemorySegment, offset: Int) {
 		let value = pop
 		switch segment {
 		case .argument: self[argument: offset] = value
@@ -437,13 +444,13 @@ extension VirtualMachine {
 
 	//MARK: - Flow Commands
 
-	@inlinable public mutating func goto(_ offset: Int) {
+	@inlinable public func goto(_ offset: Int) {
 		guard let function else { return }
 		precondition(offset < function.endIndex, "Index out of bounds: \(function)[\(offset)]")
 		self.pc = offset
 	}
 
-	@inlinable public mutating func `if`(goto offset: Int) {
+	@inlinable public func `if`(goto offset: Int) {
 		guard let function, popb else { return }
 		precondition(offset < function.endIndex, "Index out of bounds: \(function)[\(offset)]")
 		self.pc = offset
@@ -451,7 +458,7 @@ extension VirtualMachine {
 
 	//MARK: - Function Commands
 
-	@inlinable public mutating func call(_ function: VirtualFunction) {
+	@inlinable public func call(_ function: VirtualFunction) {
 		let frame = RawVirtualFrame(
 			caller: self.function,
 			callee: function,
@@ -471,7 +478,7 @@ extension VirtualMachine {
 		}
 	}
 
-	@inlinable public mutating func `return`() {
+	@inlinable public func `return`() {
 		guard !frames.isEmpty else { return }
 		let frame = frames.removeLast()
 		pc = frame.return

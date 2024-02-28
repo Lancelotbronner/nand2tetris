@@ -12,8 +12,8 @@ public final class Assembler {
 	}
 
 	public func assemble() {
-		if program.count > 32_768 && pedantic {
-			diagnose(AssemblyError.programTooLarge, at: 32_768)
+		if program.count > Hack.memory && pedantic {
+			diagnose(AssemblyError.programTooLarge, at: Hack.memory)
 		}
 
 		var variable: UInt16 = 16

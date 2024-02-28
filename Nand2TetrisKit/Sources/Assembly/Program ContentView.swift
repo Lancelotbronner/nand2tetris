@@ -30,7 +30,7 @@ public struct ProgramContentView: View {
 		.monospaced()
 		.inspector(isPresented: .constant(true)) {
 			if let selection {
-				assembler.program[selection]
+				InstructionView(assembler.program[selection])
 			}
 		}
 	}

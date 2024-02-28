@@ -71,7 +71,7 @@ I want to add support for automatically executing test files (`.tst`, `.cmp`, `.
 
 ### Hack Emulator
 
-- Load ROM/snapshot. Save ROM/snapshot/screenshot
+- Document format for the emulator's state
 - Customizable toolbar
 - Global format picker for registers & RAM. Select between signed, unsigned, hexadecimal and binary
 - Clear RAM & ROM commands

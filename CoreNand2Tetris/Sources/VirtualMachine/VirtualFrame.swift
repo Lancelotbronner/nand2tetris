@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2023-12-25.
 //
 
-public struct RawVirtualFrame: Hashable {
+public struct RawVirtualFrame: Hashable, Identifiable {
 
 	/// The function which spawned this frame
 	public let caller: VirtualFunction?
@@ -41,6 +41,8 @@ public struct RawVirtualFrame: Hashable {
 		self.this = this
 		self.that = that
 	}
+
+	public var id: RawVirtualFrame { self }
 
 }
 

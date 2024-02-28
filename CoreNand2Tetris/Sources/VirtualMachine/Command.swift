@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2023-12-25.
 //
 
-public enum Command: ExpressibleByIntegerLiteral {
+public enum Command: ExpressibleByIntegerLiteral, Hashable {
 
 	public static let `true` = Int16.max
 	public static let `false` = Int16.min

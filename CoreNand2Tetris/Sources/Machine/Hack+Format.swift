@@ -5,33 +5,10 @@
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-@available(macOS 14, *)
-public struct PointerEmulator: Identifiable {
-
-	public let vm: ObservableHackEmulator
-	public let id: Int
-
-	@usableFromInline init(_ offset: Int, in vm: ObservableHackEmulator) {
-		self.vm = vm
-		self.id = offset
-	}
-
-	public var address: UInt16 {
-		UInt16(id)
-	}
-
-	public var value: UInt16 {
-		_read { yield vm._ram[id] }
-		nonmutating _modify { yield &vm._ram[id] }
-	}
-
-}
-
 #if canImport(Foundation)
 import Foundation
 
-@available(macOS 14, *)
-extension PointerEmulator {
+extension Hack {
 
 	public struct ParseStrategy: Foundation.ParseStrategy {
 		public var pedantic: Bool
@@ -136,7 +113,7 @@ extension PointerEmulator {
 @available(macOS 14, *)
 extension FormatStyle where FormatInput == UInt16, FormatOutput == String {
 
-	public static var assembly: PointerEmulator.AssemblyFormat { .init(pedantic: false) }
+	public static var assembly: Hack.AssemblyFormat { .init(pedantic: false) }
 
 }
 

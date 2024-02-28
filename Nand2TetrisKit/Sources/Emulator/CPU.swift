@@ -11,7 +11,7 @@ import Nand2TetrisKit
 import SwiftUI
 
 public struct CPUView: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 
 	public init() { }
 
@@ -27,13 +27,13 @@ public struct CPUView: View {
 			Register("M", value: $vm.m)
 		}
 		.textFieldStyle(.roundedBorder)
-		vm.instruction
+		InstructionView(vm.instruction)
 			.fixedSize(horizontal: false, vertical: true)
 	}
 }
 
 #Preview {
-	let vm = ObservableHackEmulator()
+	let vm = ObservableMachine()
 	vm.rom[0] = Instruction(assign: .notY, to: .d, jump: .jmp).rawValue
 	return Form {
 		CPUView()

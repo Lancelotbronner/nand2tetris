@@ -104,7 +104,9 @@ public struct Computation: RawRepresentable, OptionSet {
 	/// - `X&-1`
 	public static let x = Computation(bitPattern: 0b001100)
 
-	/// `-1&Y`
+	/// `Y`
+	/// Mnemonics:
+	/// - `-1&Y`
 	public static let y = Computation(bitPattern: 0b110000)
 
 	/// `!(X&-1)`

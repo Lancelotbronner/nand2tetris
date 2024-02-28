@@ -43,10 +43,6 @@ public struct Register<Label: View>: View {
 		self.init(value, style: style) { Text(title) }
 	}
 
-	public init(_ value: PointerEmulator, style: RegisterStyle? = nil) where Label == Text {
-		self.init(value.binding, at: value.address, style: style)
-	}
-
 	private func binding(of style: RegisterStyle) -> Binding<Bool> {
 		Binding<Bool> {
 			self.style == style
@@ -78,40 +74,32 @@ public struct Register<Label: View>: View {
 	@ViewBuilder private var field: some View {
 		switch style ?? defaultStyle {
 		case .binary:
-			TextField(value: $value, format: PointerEmulator.BinaryFormat(pedantic: pedantic)) {
+			TextField(value: $value, format: Hack.BinaryFormat(pedantic: pedantic)) {
 				label
 					.fontDesign(.default)
 			}
 		case .hexadecimal:
-			TextField(value: $value, format: PointerEmulator.HexadecimalFormat(pedantic: pedantic)) {
+			TextField(value: $value, format: Hack.HexadecimalFormat(pedantic: pedantic)) {
 				label
 					.fontDesign(.default)
 			}
 		case .unsigned:
-			TextField(value: $value, format: PointerEmulator.UnsignedFormat(pedantic: pedantic)) {
+			TextField(value: $value, format: Hack.UnsignedFormat(pedantic: pedantic)) {
 				label
 					.fontDesign(.default)
 			}
 		case .signed:
-			TextField(value: $value, format: PointerEmulator.SignedFormat(pedantic: pedantic)) {
+			TextField(value: $value, format: Hack.SignedFormat(pedantic: pedantic)) {
 				label
 					.fontDesign(.default)
 			}
 		case .assembly:
-			TextField(value: $value, format: PointerEmulator.AssemblyFormat(pedantic: pedantic)) {
+			TextField(value: $value, format: Hack.AssemblyFormat(pedantic: pedantic)) {
 				label
 					.fontDesign(.default)
 			}
 		}
 	}
-}
-
-extension PointerEmulator {
-
-	@_transparent var binding: Binding<UInt16> {
-		Binding { value } set: { value = $0 }
-	}
-
 }
 
 public enum RegisterStyle {

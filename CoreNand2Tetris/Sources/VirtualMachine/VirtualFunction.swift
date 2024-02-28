@@ -7,6 +7,12 @@
 
 public struct VirtualFunction {
 
+	static let null = VirtualFunction(nil)
+
+	private init(_ storage: ManagedBuffer<Header, Command>?) {
+		self.storage = storage
+	}
+
 	@usableFromInline var storage: ManagedBuffer<Header, Command>!
 
 	public init(
@@ -16,14 +22,17 @@ public struct VirtualFunction {
 		locals: Int = 0,
 		@ArrayBuilder<Command> commands: (VirtualFunction) -> [Command]
 	) {
-		let commands = commands(self)
+		let commands = commands(VirtualFunction.null)
 		storage = ManagedBuffer.create(minimumCapacity: commands.count) { _ in
 			Header(name: name, unit: unit, args: args, locals: locals, body: commands.count)
 		}
 		commands.withContiguousStorageIfAvailable { commands in
 			storage.withUnsafeMutablePointerToElements { storage in
 				for i in commands.indices {
-					storage[i] = commands[i]
+					storage[i] = switch commands[i] {
+					case let .call(function) where function.storage == nil: Command.call(self)
+					default: commands[i]
+					}
 				}
 			}
 		}
@@ -119,7 +128,8 @@ extension VirtualFunction: Sequence {
 		}
 
 		@_transparent public mutating func next() -> Command? {
-			storage.withUnsafeMutablePointerToElements {
+			guard i < storage.header.body else { return nil }
+			return storage.withUnsafeMutablePointerToElements {
 				defer { i += 1 }
 				return $0[i]
 			}

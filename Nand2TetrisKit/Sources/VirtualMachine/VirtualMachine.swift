@@ -33,7 +33,7 @@ public struct VirtualMachineContentView: View {
 				}
 		} detail: {
 			NavigationStack(path: $path) {
-				Text("VirtualMachineView")
+				VirtualMachineView()
 					.navigationDestination(for: VirtualMachineRoute.self) {
 						switch $0 {
 						case let .frame(frame): Text("Frame")

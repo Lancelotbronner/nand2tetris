@@ -1,59 +1,56 @@
 //
 //  File.swift
+//  
 //
+//  Created by Christophe Bronner on 2024-02-28.
 //
-//  Created by Christophe Bronner on 2022-08-28.
-//
 
-import Observation
-
-@available(macOS 14, *)
-@Observable public final class ObservableHackEmulator {
-
-	/// The size of the virtual machine's ROM and RAM.
-	public static let memory = 32_768
-
-	public init() {
-		_rom = .init(repeating: 0, count: ObservableHackEmulator.memory)
-		_ram = .init(repeating: 0, count: ObservableHackEmulator.memory)
-	}
-
-	public init(
-		rom: [UInt16] = Array(repeating: 0, count: ObservableHackEmulator.memory),
-		ram: [UInt16] = Array(repeating: 0, count: ObservableHackEmulator.memory)
-	) {
-		_rom = rom
-		_ram = ram
-		_rom.reserveCapacity(ObservableHackEmulator.memory)
-		_ram.reserveCapacity(ObservableHackEmulator.memory)
-	}
+public protocol Machine: AnyObject {
 
 	//MARK: - CPU
 
 	/// The program counter.
-	public var pc: UInt16 = 0
+	var pc: UInt16 { get set }
 
 	/// The data register.
-	public var d: UInt16 = 0
+	var d: UInt16  { get set }
 
 	/// The address register.
-	public var a: UInt16 = 0
+	var a: UInt16 { get set }
 
-	/// The value pointed to by ``a``.
-	public var m: UInt16 {
-		//FIXME: Coroutine accessors and @ObservationIgnored: crashes the compiler without, errors with
-//		_read { yield _ram[Int(a)] }
-//		_modify { yield &_ram[Int(a)] }
-		get { _ram[Int(a)] }
-		set { _ram[Int(a)] = newValue }
-	}
+	//MARK: - ALU
+
+	//MARK: - Flags
+
+	/// Information about the side effects of the previous cycle.
+	var flags: CycleFlags { get set }
+
+	//MARK: - Memory
+
+	/// The read-only memory of the computer
+	var rom: [UInt16] { get set }
+
+	/// The read-write memory of the computer
+	var ram: [UInt16] { get set }
+
+}
+
+extension Machine {
+
+	//MARK: - CPU
 
 	/// The instruction to be executed.
 	@inlinable @inline(__always)
 	public var instruction: Instruction {
-		Instruction(rawValue: rom[pc])
+		Instruction(rawValue: rom[Int(pc)])
 	}
-	
+
+	/// The value pointed to by ``a``.
+	public var m: UInt16 {
+		_read { yield ram[Int(a)] }
+		_modify { yield &ram[Int(a)] }
+	}
+
 	/// Executes a single CPU cycle.
 	public func cycle() {
 		flags = CycleFlags(instruction)
@@ -135,9 +132,6 @@ import Observation
 
 	//MARK: - Flags
 
-	/// Information about the side effects of the previous cycle.
-	public var flags = CycleFlags.none
-
 	/// Whether the ALU resulted in a zero
 	@inlinable @inline(__always)
 	public var zr: Bool {
@@ -152,21 +146,23 @@ import Observation
 
 	//MARK: - Memory
 
-	public var _rom: [UInt16]
-
-	/// The read-only memory of the computer
-	@inlinable public var rom : ReadOnlyMemoryEmulator {
-		ReadOnlyMemoryEmulator(of: self)
+	/// The keyboard register.
+	@inlinable @inline(__always)
+	public var screen: ArraySlice<UInt16> {
+		_read { yield ram[16384..<24576] }
+		_modify { yield &ram[16384..<24576] }
 	}
 
-	public var _ram: [UInt16]
-
-	/// The read-write memory of the computer
-	@inlinable public var ram: RandomAccessMemoryEmulator {
-		RandomAccessMemoryEmulator(of: self)
+	/// The keyboard register.
+	@inlinable @inline(__always)
+	public var keyboard: UInt16 {
+		_read { yield ram[24576] }
+		_modify { yield &ram[24576] }
 	}
 
 }
+
+//MARK: - Cycle Flags
 
 public struct CycleFlags: RawRepresentable, OptionSet {
 

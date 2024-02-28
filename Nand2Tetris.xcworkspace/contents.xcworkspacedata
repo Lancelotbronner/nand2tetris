@@ -14,7 +14,7 @@
       location = "group:Nand2TetrisKit">
    </FileRef>
    <FileRef
-      location = "group:/Users/lancelot/Developer/System/Hack/Nand2Tetris/Nand2TetrisApp/Nand2Tetris.xcodeproj">
+      location = "group:Nand2TetrisApp/Nand2Tetris.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Assets">

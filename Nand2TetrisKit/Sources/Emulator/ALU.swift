@@ -11,59 +11,75 @@ import Nand2TetrisKit
 import SwiftUI
 
 public struct ALUView: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 
 	public init() { }
 
+	private var primary: some ShapeStyle {
+		vm.instruction.isComputing ? .primary : .tertiary
+	}
+
+	private var secondary: some ShapeStyle {
+		vm.instruction.isComputing ? .secondary : .quaternary
+	}
+
 	public var body: some View {
+		//TODO: Add help on each of these fields
 		Grid(alignment: .leading) {
 			GridRow {
 				Text("X")
+					.foregroundStyle(secondary)
 				Text(signed(vm.x))
-					.foregroundStyle(.secondary)
 					.frame(maxWidth: .infinity, alignment: .leading)
 				Text("Y")
+					.foregroundStyle(secondary)
 				Text(signed(vm.y))
-					.foregroundStyle(.secondary)
 					.frame(maxWidth: .infinity, alignment: .leading)
 				Text("O")
+					.foregroundStyle(secondary)
 				Text(signed(vm.o))
-					.foregroundStyle(.secondary)
 					.frame(maxWidth: .infinity, alignment: .leading)
 			}
 			GridRow {
 				Text("X'")
+					.foregroundStyle(secondary)
 				Text(signed(vm.lhs))
-					.foregroundStyle(.secondary)
 					.frame(maxWidth: .infinity, alignment: .leading)
 				Text("Y'")
+					.foregroundStyle(secondary)
 				Text(signed(vm.rhs))
-					.foregroundStyle(.secondary)
 					.frame(maxWidth: .infinity, alignment: .leading)
 				Text("O'")
+					.foregroundStyle(secondary)
 				Text(signed(vm.result))
-					.foregroundStyle(.secondary)
 					.frame(maxWidth: .infinity, alignment: .leading)
 			}
 		}
 		.monospaced()
+		.foregroundStyle(primary)
+
 		HStack {
 			VStack(alignment: .trailing) {
 				Text(signed(vm.lhs))
 				Text(verbatim: "\(vm.op) \(signed(vm.rhs))")
-				Text("= \(signed(vm.result))")
+				Text("= ")
+					.foregroundStyle(secondary)
+				+ Text(signed(vm.result))
 			}
 			.frame(maxWidth: .infinity, alignment: .center)
 			VStack(alignment: .trailing) {
 				Text(binary(vm.lhs))
 				Text(verbatim: "\(vm.op) \(binary(vm.rhs))")
-				Text("= \(binary(vm.result))")
+				Text("= ")
+					.foregroundStyle(secondary)
+				+ Text(binary(vm.result))
 			}
 			.frame(maxWidth: .infinity, alignment: .center)
 			Text(vm.instruction.computation.description)
 				.frame(maxWidth: .infinity, alignment: .center)
 		}
 		.monospaced()
+		.foregroundStyle(primary)
 	}
 
 	private func field(_ title: LocalizedStringKey, value: Int16) -> some View {
@@ -88,7 +104,7 @@ public struct ALUView: View {
 }
 
 #Preview {
-	let vm = ObservableHackEmulator()
+	let vm = ObservableMachine()
 	vm.rom[0] = Instruction(assign: .notY, to: .d, jump: .jmp).rawValue
 	return Form {
 		ALUView()

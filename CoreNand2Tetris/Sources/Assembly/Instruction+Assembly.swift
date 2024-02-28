@@ -13,8 +13,8 @@ extension Instruction: LosslessStringConvertible {
 			.dropFirst()
 			.prefix(while: \.isPedanticInteger)
 
-		guard let value = UInt16(_value), value <= 32_768 else {
-			throw AssemblyError.expectedIntegerInRange(_value, min: 0, max: 32_768)
+		guard let value = UInt16(_value), value <= Hack.memory else {
+			throw AssemblyError.expectedIntegerInRange(_value, min: 0, max: UInt16(Hack.memory))
 		}
 
 		source = _value
@@ -68,7 +68,7 @@ extension Instruction: LosslessStringConvertible {
 	}
 
 	public var description: String {
-		guard isComputing else { return "@\(value)" }
+		guard isComputing else { return "@\(immediate)" }
 		return "\(destination)\(destination == .null ? "" : "=")\(computation)\(jump == .none ? "" : ";")\(jump)"
 	}
 

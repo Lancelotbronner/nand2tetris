@@ -53,7 +53,7 @@ public struct RAMView: View {
 }
 
 private struct CellRAM: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 	@Binding private var editing: Int?
 	private let address: Int
 
@@ -70,7 +70,7 @@ private struct CellRAM: View {
 			if editing == address {
 				DynamicCellRAM(address, edit: $editing)
 			} else {
-				Text(vm._ram[address], format: .number)
+				Text(vm.ram[address], format: .number)
 			}
 		}
 		.foregroundStyle(address == vm.a ? Color.cyan : Color.primary)
@@ -81,7 +81,7 @@ private struct CellRAM: View {
 }
 
 private struct DynamicCellRAM: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 	@FocusState private var isFocused: Bool
 	@Binding private var editing: Int?
 	private let address: Int
@@ -93,7 +93,7 @@ private struct DynamicCellRAM: View {
 
 	var body: some View {
 		@Bindable var vm = vm
-		TextField("", value: $vm._ram[address], format: .number)
+		TextField("", value: $vm.ram[address], format: .number)
 			.focused($isFocused)
 			.onSubmit { editing = nil }
 			.onAppear { isFocused = true }
@@ -101,7 +101,7 @@ private struct DynamicCellRAM: View {
 }
 
 #Preview {
-	let vm = ObservableHackEmulator()
+	let vm = ObservableMachine()
 	vm.ram.randomize()
 	return Form {
 		Section("RAM") {

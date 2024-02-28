@@ -16,14 +16,13 @@ public struct EmulatorSnapshot {
 		ram = []
 	}
 
-	@available(macOS 14, *)
-	public init(_ title: String, of vm: ObservableHackEmulator) {
+	public init(_ title: String, of emulator: some Machine) {
 		self.title = title
-		pc = vm.pc
-		d = vm.d
-		a = vm.a
-		rom = vm._rom
-		ram = vm._ram
+		pc = emulator.pc
+		d = emulator.d
+		a = emulator.a
+		rom = emulator.rom
+		ram = emulator.ram
 	}
 
 	/// Arbitrary title for the snapshot, such as the loaded file or a labeled bugged state.
@@ -57,7 +56,6 @@ import Foundation
 
 extension EmulatorSnapshot {
 
-	@available(macOS 14, *)
 	public init(_ data: Data) {
 		var data = data
 		let _title = data
@@ -68,14 +66,13 @@ extension EmulatorSnapshot {
 		pc = data.consume() ?? 0
 		d = data.consume() ?? 0
 		a = data.consume() ?? 0
-		rom = data.consume(ObservableHackEmulator.memory)
-		ram = data.consume(ObservableHackEmulator.memory)
+		rom = data.consume(Hack.memory)
+		ram = data.consume(Hack.memory)
 	}
 
-	@available(macOS 14, *)
 	public var data: Data {
 		var data = Data()
-		data.reserveCapacity(ObservableHackEmulator.memory * 2 + 6 + title.count * 2)
+		data.reserveCapacity(Hack.memory * 2 + 6 + title.count * 2)
 		if let title = title.data(using: .utf8) {
 			data.append(title)
 		}

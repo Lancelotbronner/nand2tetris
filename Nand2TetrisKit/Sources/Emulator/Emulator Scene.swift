@@ -9,7 +9,7 @@ import SwiftUI
 import Nand2TetrisKit
 
 public struct EmulatorScene: Scene {
-	@State private var emulator = ObservableHackEmulator()
+	@State private var emulator = ObservableMachine()
 
 	public init() {
 		emulator.rom[0] = 16384

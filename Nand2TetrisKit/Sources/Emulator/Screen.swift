@@ -11,7 +11,7 @@ import Nand2TetrisKit
 import SwiftUI
 
 public struct Screen: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 
 	public init() { }
 
@@ -27,7 +27,7 @@ public struct Screen: View {
 				cgcontext.setFillColor(.white)
 
 				//TODO: Find a way to only observe the screen's region
-				vm.ram.screen.withUnsafeBytes { buffer in
+				vm.screen.withUnsafeBytes { buffer in
 					let data = Data(buffer: buffer.bindMemory(to: UInt16.self))
 					let mask = CGImage(
 						maskWidth: 512,
@@ -52,8 +52,8 @@ public struct Screen: View {
 }
 
 #Preview {
-	let vm = ObservableHackEmulator()
-	vm.ram.randomize()
+	let vm = ObservableMachine()
+	vm.screen.randomize()
 //	for i in 0..<256 {
 //		vm.ram.screen[vm.ram.screen.startIndex + i] = .max
 //	}

@@ -10,44 +10,41 @@ import Nand2TetrisKit
 #if canImport(SwiftUI)
 import SwiftUI
 
-extension Instruction: View {
+public struct InstructionView: View {
+	let instruction: Instruction
+
+	public init(_ instruction: Instruction) {
+		self.instruction = instruction
+	}
 
 	public var body: some View {
+		//TODO: Add help to each flag
 		HStack {
-			Text("i")
-				.foregroundStyle(i && isComputing ? .primary : .tertiary)
+			flag("i", \.i)
 			Divider()
-			Text("zx")
-				.foregroundStyle(zx && isComputing ? .primary : .tertiary)
-			Text("nx")
-				.foregroundStyle(nx && isComputing ? .primary : .tertiary)
-			Text("zy")
-				.foregroundStyle(zy && isComputing ? .primary : .tertiary)
-			Text("ny")
-				.foregroundStyle(ny && isComputing ? .primary : .tertiary)
-			Text("f")
-				.foregroundStyle(f && isComputing ? .primary : .tertiary)
-			Text("no")
-				.foregroundStyle(no && isComputing ? .primary : .tertiary)
+			flag("zx", \.zx)
+			flag("nx", \.nx)
+			flag("zy", \.zy)
+			flag("ny", \.ny)
+			flag("f", \.f)
+			flag("no", \.no)
 			Divider()
-			Text("a")
-				.foregroundStyle(a && isComputing ? .primary : .tertiary)
-			Text("d")
-				.foregroundStyle(d && isComputing ? .primary : .tertiary)
-			Text("m")
-				.foregroundStyle(m && isComputing ? .primary : .tertiary)
+			flag("a", \.a)
+			flag("d", \.d)
+			flag("m", \.m)
 			Divider()
-			Text("gt")
-				.foregroundStyle(gt && isComputing ? .primary : .tertiary)
-			Text("eq")
-				.foregroundStyle(eq && isComputing ? .primary : .tertiary)
-			Text("lt")
-				.foregroundStyle(lt && isComputing ? .primary : .tertiary)
-			Text(description)
+			flag("gt", \.gt)
+			flag("eq", \.eq)
+			flag("lt", \.lt)
+			Text(instruction.description)
 				.padding(.leading)
 		}
 		.monospaced()
 	}
 
+	private func flag(_ title: LocalizedStringKey, _ keyPath: KeyPath<Instruction, Bool>) -> some View {
+		Text(title)
+			.foregroundStyle(instruction.isComputing && instruction[keyPath: keyPath] ? .primary : .tertiary)
+	}
 }
 #endif

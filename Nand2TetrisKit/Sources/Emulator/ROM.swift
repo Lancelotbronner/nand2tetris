@@ -11,7 +11,7 @@ import Nand2TetrisKit
 import SwiftUI
 
 public struct ROM: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 	@Environment(\.pedantic) private var pedantic
 	@State private var goto: UInt16?
 	@State private var selection: UInt16?
@@ -54,7 +54,7 @@ public struct ROM: View {
 }
 
 private struct CellROM: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 	@Environment(\.pedantic) private var pedantic
 	@Binding private var editing: Int?
 	private let address: Int
@@ -71,7 +71,7 @@ private struct CellROM: View {
 			if editing == address {
 				DynamicCellROM(address, edit: $editing)
 			} else {
-				Text(vm._rom[address], format: PointerEmulator.AssemblyFormat(pedantic: pedantic))
+				Text(vm.rom[address], format: Hack.AssemblyFormat(pedantic: pedantic))
 			}
 		}
 		.foregroundStyle(address == vm.pc ? Color.cyan : Color.primary)
@@ -82,7 +82,7 @@ private struct CellROM: View {
 }
 
 private struct DynamicCellROM: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 	@Environment(\.pedantic) private var pedantic
 	@FocusState private var isFocused: Bool
 	@Binding private var editing: Int?
@@ -95,7 +95,7 @@ private struct DynamicCellROM: View {
 
 	var body: some View {
 		@Bindable var vm = vm
-		TextField("", value: $vm._rom[address], format: PointerEmulator.AssemblyFormat(pedantic: pedantic))
+		TextField("", value: $vm.rom[address], format: Hack.AssemblyFormat(pedantic: pedantic))
 			.focused($isFocused)
 			.onSubmit { editing = nil }
 			.onAppear { isFocused = true }
@@ -103,7 +103,7 @@ private struct DynamicCellROM: View {
 }
 
 #Preview {
-	let vm = ObservableHackEmulator()
+	let vm = ObservableMachine()
 	vm.rom.randomize()
 	vm.rom[4] = 0
 	return Form {

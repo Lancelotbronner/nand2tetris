@@ -36,7 +36,14 @@ public struct VirtualMachineScene: Scene {
 			Command.add
 			Command.return
 		}
+		let main = VirtualFunction("Sys.init", into: unit) {
+			Command.push(constant: 4)
+			Command.call(function)
+		}
 		vm.insert(function)
+		vm.insert(main)
+		// prime the VM
+		vm.call(main)
 	}
 
 	public var body: some Scene {

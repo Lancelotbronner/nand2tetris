@@ -11,7 +11,7 @@ import Nand2TetrisKit
 import SwiftUI
 
 public struct HackEmulatorView: View {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 	@State private var simulating: Task<Void, Never>?
 
 	public init() { }
@@ -54,7 +54,7 @@ public struct HackEmulatorView: View {
 }
 
 internal struct MachineToolbar: ToolbarContent {
-	@Environment(ObservableHackEmulator.self) private var vm
+	@Environment(ObservableMachine.self) private var vm
 	@Binding private var simulating: Task<Void, Never>?
 
 	init(simulation task: Binding<Task<Void, Never>?>) {
@@ -120,7 +120,7 @@ internal struct MachineToolbar: ToolbarContent {
 }
 
 #Preview {
-	let vm = ObservableHackEmulator()
+	let vm = ObservableMachine()
 	vm.rom.randomize()
 	vm.rom[4] = 0
 	return HackEmulatorView()

@@ -15,6 +15,10 @@ public struct Instruction: RawRepresentable, Hashable {
 		self.rawValue = rawValue
 	}
 
+	public init(rawValue: Int16) {
+		self.rawValue = UInt16(bitPattern: rawValue)
+	}
+
 	//MARK: - Adressing Instruction
 
 	public init(addressing value: UInt16) {
@@ -27,7 +31,7 @@ public struct Instruction: RawRepresentable, Hashable {
 	}
 
 	/// The value literal of an adressing instruction
-	public var value: UInt16 {
+	public var immediate: UInt16 {
 		rawValue & 0x7FFF
 	}
 
@@ -43,11 +47,12 @@ public struct Instruction: RawRepresentable, Hashable {
 		!isAddressing
 	}
 
+	/// The computation of this instruction
 	public var computation: Computation {
 		Computation(mask: rawValue)
 	}
 
-	/// Whether the instruction is indirect (M[A] rather than A)
+	/// Whether the instruction is indirect (`M[A]` rather than `A`)
 	public var i: Bool {
 		computation.contains(.i)
 	}
@@ -72,7 +77,7 @@ public struct Instruction: RawRepresentable, Hashable {
 		rawValue & 0x100 != 0
 	}
 
-	/// Whether to ADD or AND the operands
+	/// Whether to `ADD` or `AND` the operands
 	public var f: Bool {
 		rawValue & 0x80 != 0
 	}
@@ -82,6 +87,7 @@ public struct Instruction: RawRepresentable, Hashable {
 		rawValue & 0x40 != 0
 	}
 
+	/// The destination of this instruction
 	public var destination: Destination {
 		Destination(mask: rawValue)
 	}
@@ -101,6 +107,7 @@ public struct Instruction: RawRepresentable, Hashable {
 		destination.contains(.d)
 	}
 
+	/// The jump of this instruction
 	public var jump: Jump {
 		Jump(mask: rawValue)
 	}
@@ -122,7 +129,7 @@ public struct Instruction: RawRepresentable, Hashable {
 
 	//MARK: - Shortcuts
 
-	/// Whether the instruction is indirect (M[A] rather than A)
+	/// Whether the instruction is indirect (`M[A]` rather than `A`)
 	@_transparent public var isIndirect: Bool {
 		i
 	}
