@@ -29,6 +29,7 @@ extension Data {
 		}
 	}
 
+	@usableFromInline
 	internal func read<T>(as _: T.Type = T.self) -> [T] {
 		withUnsafeBytes { buffer in
 			Array(buffer.bindMemory(to: T.self))

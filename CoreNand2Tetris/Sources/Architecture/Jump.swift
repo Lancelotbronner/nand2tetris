@@ -5,16 +5,20 @@
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct Jump: RawRepresentable, OptionSet, CaseIterable {
+public struct Jump: RawRepresentable, OptionSet, Hashable, CaseIterable {
+
+	public static let mask: UInt16 = 0x7
 
 	public var rawValue: UInt16
 
+	@inlinable
 	public init(rawValue: UInt16) {
 		self.rawValue = rawValue
 	}
 
+	@inlinable
 	public init(mask rawValue: UInt16) {
-		self.init(rawValue: rawValue & 0x7)
+		self.init(rawValue: rawValue & Jump.mask)
 	}
 
 	public init(bitPattern rawValue: UInt16) {

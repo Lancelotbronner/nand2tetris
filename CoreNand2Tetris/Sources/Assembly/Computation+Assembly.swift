@@ -7,6 +7,8 @@
 
 extension Computation: LosslessStringConvertible {
 
+	//MARK: - Parsing
+
 	private static func parse(pedantic description: Substring) -> Computation? {
 		switch description {
 		case "0": .zero
@@ -65,8 +67,41 @@ extension Computation: LosslessStringConvertible {
 		try? self.init(Substring(description), pedantic: true)
 	}
 
+	//MARK: - Describing
+
+	@inlinable
+	public static func describe(operand x: String, zero z: Bool, negate n: Bool) -> String {
+		switch (z, n) {
+		case (false, false): x
+		case (false, true): "!" + x
+		case (true, false): "0"
+		case (true, true): "-1"
+		}
+	}
+
+	@inlinable
+	public static func describe(output o: String, negate n: Bool) -> String {
+		n ? "!(\(o))" : o
+	}
+
+	@inlinable
+	public var formattedX: String {
+		Computation.describe(operand: "D", zero: contains(.zx), negate: contains(.nx))
+	}
+
+	@inlinable
+	public var formattedY: String {
+		Computation.describe(operand: contains(.i) ? "M" : "A", zero: contains(.zy), negate: contains(.ny))
+	}
+
+	@inlinable
+	public var formattedOp: String {
+		contains(.f) ? "+" : "&"
+	}
+
 	public var description: String {
 		switch self {
+			// Legal instructions
 		case .zero: "0"
 		case .one: "1"
 		case .minusOne: "-1"
@@ -95,7 +130,8 @@ extension Computation: LosslessStringConvertible {
 		case .and.indirect: "D&M"
 		case .or: "D|A"
 		case .or.indirect: "D|M"
-		default: "?"
+			// Unknown instructions
+		default: Computation.describe(output: "\(formattedX)\(formattedOp)\(formattedY)", negate: contains(.no))
 		}
 	}
 

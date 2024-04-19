@@ -8,15 +8,34 @@
 public struct Instruction: RawRepresentable, Hashable {
 
 	public static let nop = Instruction(assign: .zero)
+	public static let zero = Instruction(rawValue: 0)
 
-	public let rawValue: UInt16
+	public var rawValue: UInt16
 
 	public init(rawValue: UInt16) {
 		self.rawValue = rawValue
 	}
 
+	@_disfavoredOverload
 	public init(rawValue: Int16) {
 		self.rawValue = UInt16(bitPattern: rawValue)
+	}
+
+	//MARK: - Instruction
+
+	public static let maskA: UInt16 = 0x8000
+	public static let maskC: UInt16 = 0xE000
+
+	/// Whether the instruction is a computing or addressing operation.
+	public var mode: Bool {
+		get { rawValue & Instruction.maskA != 0 }
+		set {
+			if newValue {
+				rawValue &= ~Instruction.maskA
+			} else {
+				rawValue |= Instruction.maskC
+			}
+		}
 	}
 
 	//MARK: - Adressing Instruction
@@ -25,9 +44,9 @@ public struct Instruction: RawRepresentable, Hashable {
 		self.init(rawValue: value & 0x7FFF)
 	}
 
-	/// Whether the instruction is an addressing
+	/// Whether the instruction is an addressing operation.
 	public var isAddressing: Bool {
-		rawValue & 0x8000 == 0
+		!mode
 	}
 
 	/// The value literal of an adressing instruction
@@ -37,111 +56,141 @@ public struct Instruction: RawRepresentable, Hashable {
 
 	//MARK: - Computing Instruction
 
-	@inlinable @inline(__always)
+	@inlinable
 	public init(assign computation: Computation, to destination: Destination = .null, jump: Jump = .none) {
-		self.init(rawValue: 0xE000 | computation.rawValue | destination.rawValue | jump.rawValue)
+		self.init(rawValue: Instruction.maskC | computation.rawValue | destination.rawValue | jump.rawValue)
 	}
 
-	/// Whether the instruction is a computation
+	/// Whether the instruction is a computing operation.
 	public var isComputing: Bool {
-		!isAddressing
+		mode
 	}
 
 	/// The computation of this instruction
+	@inlinable
 	public var computation: Computation {
-		Computation(mask: rawValue)
+		get { Computation(mask: rawValue) }
+		set { 
+			rawValue &= ~Computation.mask
+			rawValue |= newValue.rawValue
+			rawValue |= Instruction.maskC
+		}
 	}
 
 	/// Whether the instruction is indirect (`M[A]` rather than `A`)
 	public var i: Bool {
-		computation.contains(.i)
+		get { computation.contains(Computation.i) }
+		set { computation[Computation.i] = newValue }
 	}
 
 	/// Whether to zero the first operand
 	public var zx: Bool {
-		computation.contains(.zx)
+		get { computation.contains(Computation.zx) }
+		set { computation[Computation.zx] = newValue }
 	}
 
 	/// Whether to invert the first operand
 	public var nx: Bool {
-		rawValue & 0x400 != 0
+		get { computation.contains(Computation.nx) }
+		set { computation[Computation.nx] = newValue }
 	}
 
 	/// Whether to zero the second operand
 	public var zy: Bool {
-		rawValue & 0x200 != 0
+		get { computation.contains(Computation.zy) }
+		set { computation[Computation.zy] = newValue }
 	}
 
 	/// Whether to invert the second operand
 	public var ny: Bool {
-		rawValue & 0x100 != 0
+		get { computation.contains(Computation.ny) }
+		set { computation[Computation.ny] = newValue }
 	}
 
 	/// Whether to `ADD` or `AND` the operands
-	public var f: Bool {
-		rawValue & 0x80 != 0
+	public var f: Bool  {
+		get { computation.contains(Computation.f) }
+		set { computation[Computation.f] = newValue }
 	}
 
 	/// Whether to invert the output
 	public var no: Bool {
-		rawValue & 0x40 != 0
+		get { computation.contains(Computation.no) }
+		set { computation[Computation.no] = newValue }
 	}
 
 	/// The destination of this instruction
+	@inlinable
 	public var destination: Destination {
-		Destination(mask: rawValue)
+		get { Destination(mask: rawValue) }
+		set {
+			rawValue &= ~Destination.mask
+			rawValue |= newValue.rawValue
+			rawValue |= Instruction.maskC
+		}
 	}
 
-	/// Whether to store the result in the address register (A)
+	/// Whether to store the result in the address register (`A`)
 	public var a: Bool {
-		destination.contains(.a)
+		get { destination.contains(Destination.a) }
+		set { destination[Destination.a] = newValue }
 	}
 
-	/// Whether to store the result to memory (M[A])
+	/// Whether to store the result to memory (`M[A]`)
 	public var m: Bool {
-		destination.contains(.m)
+		get { destination.contains(Destination.m) }
+		set { destination[Destination.m] = newValue }
 	}
 
-	/// Whether to store the result to the data register (D)
+	/// Whether to store the result to the data register (`D`)
 	public var d: Bool {
-		destination.contains(.d)
+		get { destination.contains(Destination.d) }
+		set { destination[Destination.d] = newValue }
 	}
 
 	/// The jump of this instruction
 	public var jump: Jump {
-		Jump(mask: rawValue)
+		get { Jump(mask: rawValue) }
+		set {
+			rawValue &= ~Jump.mask
+			rawValue |= newValue.rawValue
+			rawValue |= Instruction.maskC
+		}
 	}
 
 	/// Jump if the output is greater than 0
 	public var gt: Bool {
-		rawValue & 0x4 != 0
+		get { jump.contains(Jump.jgt) }
+		set { jump[Jump.jgt] = newValue }
 	}
 
 	/// Jump if the output is equal to 0
 	public var eq: Bool {
-		rawValue & 0x2 != 0
+		get { jump.contains(Jump.jeq) }
+		set { jump[Jump.jeq] = newValue }
 	}
 
 	/// Jump if the output is lower than 0
 	public var lt: Bool {
-		rawValue & 0x1 != 0
+		get { jump.contains(Jump.jlt) }
+		set { jump[Jump.jlt] = newValue }
 	}
 
 	//MARK: - Shortcuts
 
-	/// Whether the instruction is indirect (`M[A]` rather than `A`)
-	@_transparent public var isIndirect: Bool {
-		i
-	}
-
 	/// Whether a computation instruction will ADD operands together
-	@_transparent public var isAdd: Bool {
+	@_transparent public var add: Bool {
 		f
 	}
 
 	/// Whether a computation instruction will AND operands together
-	@_transparent public var isAnd: Bool {
+	@_transparent public var and: Bool {
 		!f
+	}
+
+	/// Whether the instruction is a legal pedantic instruction
+	@_transparent public var legal: Bool {
+		computation.legal
 	}
 
 }

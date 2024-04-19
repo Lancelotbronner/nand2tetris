@@ -28,7 +28,6 @@ public struct CPUView: View {
 		}
 		.textFieldStyle(.roundedBorder)
 		InstructionView(vm.instruction)
-			.fixedSize(horizontal: false, vertical: true)
 	}
 }
 

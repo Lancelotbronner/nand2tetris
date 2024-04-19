@@ -5,21 +5,29 @@
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct Computation: RawRepresentable, OptionSet {
+public struct Computation: RawRepresentable, OptionSet, Hashable {
+
+	public static let mask: UInt16 = 0x1FC0
 
 	public var rawValue: UInt16
 
+	@inlinable
 	public init(rawValue: UInt16) {
 		self.rawValue = rawValue
 	}
 
+	@inlinable
 	public init(mask rawValue: UInt16) {
-		self.init(rawValue: rawValue & 0x1FC0)
+		self.init(rawValue: rawValue & Computation.mask)
 	}
 
 	public init(bitPattern rawValue: UInt16) {
 		self.init(rawValue: (rawValue & 0x7F) << 6)
 	}
+
+	public static let legal: Set<Computation> = [
+	.zero, .one, .minusOne, .x, .y, .y.indirect, .notX, .notY, .notY.indirect, .negX, .negY, .negY.indirect, .incX, .incY, .incY.indirect, .decX, .decY, .decY.indirect, .add, .add.indirect, .subY, .subY.indirect, .subX, .subX.indirect, .and, .and.indirect, .or, .or.indirect
+	]
 
 	public static let allCases: [Computation] = {
 		var tmp: [Computation] = [Computation(rawValue: 0)]
@@ -29,6 +37,11 @@ public struct Computation: RawRepresentable, OptionSet {
 
 	@_transparent public var indirect: Computation {
 		union(.i)
+	}
+
+	/// Whether the computation is a legal pedantic instruction
+	@_transparent public var legal: Bool {
+		Computation.legal.contains(self)
 	}
 
 	//MARK: - Flags
@@ -105,6 +118,7 @@ public struct Computation: RawRepresentable, OptionSet {
 	public static let x = Computation(bitPattern: 0b001100)
 
 	/// `Y`
+	/// 
 	/// Mnemonics:
 	/// - `-1&Y`
 	public static let y = Computation(bitPattern: 0b110000)

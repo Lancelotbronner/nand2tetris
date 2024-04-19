@@ -5,16 +5,20 @@
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct Destination: RawRepresentable, OptionSet, CaseIterable {
+public struct Destination: RawRepresentable, OptionSet, Hashable, CaseIterable {
+
+	public static let mask: UInt16 = 0x38
 
 	public var rawValue: UInt16
 
+	@inlinable
 	public init(rawValue: UInt16) {
 		self.rawValue = rawValue
 	}
 
+	@inlinable
 	public init(mask rawValue: UInt16) {
-		self.init(rawValue: rawValue & 0x38)
+		self.init(rawValue: rawValue & Destination.mask)
 	}
 
 	public init(bitPattern rawValue: UInt16) {

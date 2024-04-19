@@ -13,25 +13,13 @@ struct VirtualMachineSidebar: View {
 
 	init() { }
 
-	private var isProgram: Binding<Bool> {
-		Binding { tab == .program } set: {
-			if $0 { tab = .program}
-		}
-	}
-
-	private var isCallstack: Binding<Bool> {
-		Binding { tab == .callstack } set: {
-			if $0 { tab = .callstack}
-		}
-	}
-
 	var body: some View {
 		Divider()
 		HStack {
-			Toggle(isOn: isProgram) {
+			Toggle(isOn: $tab == .program) {
 				Label("Program", systemImage: "doc.badge.gearshape")
 			}
-			Toggle(isOn: isCallstack) {
+			Toggle(isOn: $tab == .callstack) {
 				Label("Callstack", systemImage: "text.line.last.and.arrowtriangle.forward")
 			}
 		}

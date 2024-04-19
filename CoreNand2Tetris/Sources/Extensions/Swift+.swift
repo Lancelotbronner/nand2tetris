@@ -29,6 +29,22 @@ extension Character {
 
 }
 
+extension OptionSet {
+
+	@inlinable
+	public subscript(value: Element) -> Bool {
+		get { contains(value) }
+		set {
+			if newValue {
+				insert(value)
+			} else {
+				remove(value)
+			}
+		}
+	}
+
+}
+
 extension MutableCollection where Element: FixedWidthInteger {
 
 	public mutating func randomize() {
