@@ -12,11 +12,14 @@ struct VirtualMachineView: View {
 	@Environment(ObservableVirtualMachine.self) private var vm
 
 	var body: some View {
-		Text("Virtual Machine")
-			.toolbar {
-				Button("Advance") {
-					vm.step()
-				}
+		HStack {
+			VirtualAssemblyEditor()
+			Spacer()
+		}
+		.toolbar {
+			Button("Advance") {
+				vm.step()
 			}
+		}
 	}
 }

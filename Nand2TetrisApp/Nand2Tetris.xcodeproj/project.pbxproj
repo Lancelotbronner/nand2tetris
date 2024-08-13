@@ -3,23 +3,20 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		736D5C832B3A358C00614682 /* Nand2TetrisCompanionKit in Frameworks */ = {isa = PBXBuildFile; productRef = 736D5C822B3A358C00614682 /* Nand2TetrisCompanionKit */; };
-		73B552082B2AB3E800F449C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73B552012B2AB3E800F449C9 /* Assets.xcassets */; };
-		73B5520A2B2AB3E800F449C9 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B552042B2AB3E800F449C9 /* App.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		733B047F2978B60900B91D98 /* Nand2TetrisApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nand2TetrisApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		73B552012B2AB3E800F449C9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		73B552032B2AB3E800F449C9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		73B552042B2AB3E800F449C9 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		73B552052B2AB3E800F449C9 /* Nand2Tetris.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Nand2Tetris.entitlements; sourceTree = "<group>"; };
-		73B552072B2AB3E800F449C9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		73B9F1142C6BF8EB00397DC1 /* Nand2Tetris */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Nand2Tetris; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		733B047C2978B60900B91D98 /* Frameworks */ = {
@@ -36,7 +33,7 @@
 		733B04762978B60900B91D98 = {
 			isa = PBXGroup;
 			children = (
-				73B552002B2AB3E800F449C9 /* Nand2Tetris */,
+				73B9F1142C6BF8EB00397DC1 /* Nand2Tetris */,
 				733B04802978B60900B91D98 /* Products */,
 				733B04922978B64D00B91D98 /* Frameworks */,
 			);
@@ -57,26 +54,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		73B552002B2AB3E800F449C9 /* Nand2Tetris */ = {
-			isa = PBXGroup;
-			children = (
-				73B552052B2AB3E800F449C9 /* Nand2Tetris.entitlements */,
-				73B552072B2AB3E800F449C9 /* Info.plist */,
-				73B552042B2AB3E800F449C9 /* App.swift */,
-				73B552012B2AB3E800F449C9 /* Assets.xcassets */,
-				73B552022B2AB3E800F449C9 /* Preview Content */,
-			);
-			path = Nand2Tetris;
-			sourceTree = "<group>";
-		};
-		73B552022B2AB3E800F449C9 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				73B552032B2AB3E800F449C9 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -91,6 +68,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				73B9F1142C6BF8EB00397DC1 /* Nand2Tetris */,
 			);
 			name = Nand2TetrisApp;
 			packageProductDependencies = (
@@ -140,7 +120,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73B552082B2AB3E800F449C9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,7 +130,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73B5520A2B2AB3E800F449C9 /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -54,14 +54,16 @@ public struct InstructionView: View {
 			Divider()
 				.padding(.horizontal, 2)
 
-			Text(instruction.description)
-				.minimumScaleFactor(0.6)
-				.padding(.horizontal, 4)
+			Spacer()
 
 			Text("●")
 				.foregroundStyle(.red)
 				.opacity(instruction.legal ? 0 : 1)
 				.help("The '\(instruction.computation.description)' instruction is illegal in pedantic mode")
+
+			Text(instruction.description)
+				.minimumScaleFactor(0.6)
+				.padding(.horizontal, 4)
 		}
 		.monospaced()
 		.lineLimit(1)

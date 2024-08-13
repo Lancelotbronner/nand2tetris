@@ -65,6 +65,8 @@ The companion app, built with SwiftUI.
 
 I'm adding support for the virtual machine (`.vm` files) and its corresponding translator (`.vm` => `.hack`) to `Nand2Tetris`.
 
+I would like, for GUIs, to produce an abstract syntax tree of the VM program
+
 ### Test Module
 
 I want to add support for automatically executing test files (`.tst`, `.cmp`, `.out`) within `XCTNand2Tetris`.
