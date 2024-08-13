@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  Jump.swift
+//  CoreNand2Tetris
 //
 //  Created by Christophe Bronner on 2022-08-28.
 //
@@ -21,6 +21,7 @@ public struct Jump: RawRepresentable, OptionSet, Hashable, CaseIterable {
 		self.init(rawValue: rawValue & Jump.mask)
 	}
 
+	@inlinable
 	public init(bitPattern rawValue: UInt16) {
 		self.init(mask: rawValue)
 	}

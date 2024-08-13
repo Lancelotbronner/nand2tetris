@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  Computation.swift
+//  CoreNand2Tetris
 //
 //  Created by Christophe Bronner on 2022-08-28.
 //
@@ -21,12 +21,13 @@ public struct Computation: RawRepresentable, OptionSet, Hashable {
 		self.init(rawValue: rawValue & Computation.mask)
 	}
 
+	@inlinable
 	public init(bitPattern rawValue: UInt16) {
 		self.init(rawValue: (rawValue & 0x7F) << 6)
 	}
 
 	public static let legal: Set<Computation> = [
-	.zero, .one, .minusOne, .x, .y, .y.indirect, .notX, .notY, .notY.indirect, .negX, .negY, .negY.indirect, .incX, .incY, .incY.indirect, .decX, .decY, .decY.indirect, .add, .add.indirect, .subY, .subY.indirect, .subX, .subX.indirect, .and, .and.indirect, .or, .or.indirect
+		.zero, .one, .minusOne, .x, .y, .y.indirect, .notX, .notY, .notY.indirect, .negX, .negY, .negY.indirect, .incX, .incY, .incY.indirect, .decX, .decY, .decY.indirect, .add, .add.indirect, .subY, .subY.indirect, .subX, .subX.indirect, .and, .and.indirect, .or, .or.indirect
 	]
 
 	public static let allCases: [Computation] = {
@@ -34,7 +35,13 @@ public struct Computation: RawRepresentable, OptionSet, Hashable {
 		tmp.append(contentsOf: (UInt16(0x40)..<0x1000).map(Computation.init(rawValue:)))
 		return tmp
 	}()
+	
+	/// Produces the direct (`Y=A`) version of this computation.
+	@_transparent public var direct: Computation {
+		subtracting(.i)
+	}
 
+	/// Produces the indirect (`Y=M[A]`) version of this computation.
 	@_transparent public var indirect: Computation {
 		union(.i)
 	}

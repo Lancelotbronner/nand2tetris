@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  AssembleCommand.swift
+//  nand2tetris
 //
 //  Created by Christophe Bronner on 2023-10-18.
 //
@@ -66,9 +66,8 @@ struct AssembleCommand: ParsableCommand {
 
 		assembler.file = URL(filePath: input, directoryHint: .notDirectory).lastPathComponent
 
-		if input.hasSuffix(".hack"), let data = FileManager.default.contents(atPath: input) {
-			//TODO: Support text version
-			assembler.process(data: data)
+		if input.hasSuffix(".hack"), let data = try? String(contentsOfFile: input) {
+			assembler.process(data)
 			return
 		}
 
