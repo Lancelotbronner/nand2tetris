@@ -4,17 +4,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "Nand2TetrisKit",
+	name: "Nand2TetrisKit",
 	platforms: [
 		.macOS(.v14),
 	],
-    products: [
-        .library(name: "Nand2TetrisKit", targets: ["Nand2TetrisKit"]),
+	products: [
+		.library(name: "Nand2TetrisKit", targets: ["Nand2TetrisKit"]),
 		.library(name: "XCTNand2Tetris", targets: ["XCTNand2Tetris"]),
-    ],
-    targets: [
-        .target(
-            name: "Nand2TetrisKit",
+	],
+	targets: [
+		.target(
+			name: "Nand2TetrisKit",
 			path: "Sources"),
 
 		.target(
@@ -22,9 +22,9 @@ let package = Package(
 			dependencies: ["Nand2TetrisKit"],
 			path: "Tests/XCTNand2Tetris"),
 
-        .testTarget(
-            name: "Nand2TetrisTests",
+		.testTarget(
+			name: "Nand2TetrisTests",
 			dependencies: ["Nand2TetrisKit", "XCTNand2Tetris"],
 			path: "Tests/Nand2Tetris"),
-    ]
+	]
 )

@@ -25,6 +25,7 @@ public struct AssemblyEditor: View {
 					}()
 					Text(verbatim: "\(line)")
 				}
+				Spacer()
 			}
 			.foregroundStyle(.secondary)
 			TextEditor(text: $text)

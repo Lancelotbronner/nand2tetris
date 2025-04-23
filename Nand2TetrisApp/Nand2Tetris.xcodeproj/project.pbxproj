@@ -11,7 +11,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		733B047F2978B60900B91D98 /* Nand2TetrisApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nand2TetrisApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7361410B2D33EF8400EA8778 /* Nand2TetrisApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Nand2TetrisApp.app; path = /Users/lancelot/Developer/System/Nand2Tetris/Nand2Tetris/Nand2TetrisApp/build/Debug/Nand2TetrisApp.app; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -34,24 +34,7 @@
 			isa = PBXGroup;
 			children = (
 				73B9F1142C6BF8EB00397DC1 /* Nand2Tetris */,
-				733B04802978B60900B91D98 /* Products */,
-				733B04922978B64D00B91D98 /* Frameworks */,
 			);
-			sourceTree = "<group>";
-		};
-		733B04802978B60900B91D98 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				733B047F2978B60900B91D98 /* Nand2TetrisApp.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		733B04922978B64D00B91D98 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,7 +60,7 @@
 				736D5C822B3A358C00614682 /* Nand2TetrisCompanionKit */,
 			);
 			productName = Nand2Tetris;
-			productReference = 733B047F2978B60900B91D98 /* Nand2TetrisApp.app */;
+			productReference = 7361410B2D33EF8400EA8778 /* Nand2TetrisApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -106,7 +89,7 @@
 			mainGroup = 733B04762978B60900B91D98;
 			packageReferences = (
 			);
-			productRefGroup = 733B04802978B60900B91D98 /* Products */;
+			productRefGroup = 733B04762978B60900B91D98;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

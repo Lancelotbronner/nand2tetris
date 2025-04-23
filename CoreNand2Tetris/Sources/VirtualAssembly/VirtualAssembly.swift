@@ -1,11 +1,11 @@
 //
-//  File.swift
-//  
+//  VirtualAssembly.swift
+//  Nand2Tetris
 //
 //  Created by Christophe Bronner on 2023-12-15.
 //
 
-public enum CommandSyntax {
+public enum VirtualAssembly {
 
 	//MARK: - Arithmetic Commands
 

@@ -9,17 +9,17 @@ public struct VirtualFunction {
 
 	static let null = VirtualFunction(nil)
 
-	private init(_ storage: ManagedBuffer<Header, Command>?) {
+	private init(_ storage: ManagedBuffer<Header, VirtualInstruction>?) {
 		self.storage = storage
 	}
 
-	@usableFromInline var storage: ManagedBuffer<Header, Command>!
+	@usableFromInline var storage: ManagedBuffer<Header, VirtualInstruction>!
 
 	public init(
 		_ name: String,
 		into unit: VirtualUnit,
 		locals: Int = 0,
-		@ArrayBuilder<Command> commands: (VirtualFunction) -> [Command]
+		@ArrayBuilder<VirtualInstruction> commands: (VirtualFunction) -> [VirtualInstruction]
 	) {
 		let commands = commands(VirtualFunction.null)
 		storage = ManagedBuffer.create(minimumCapacity: commands.count) { _ in
@@ -29,7 +29,7 @@ public struct VirtualFunction {
 			storage.withUnsafeMutablePointerToElements { storage in
 				for i in commands.indices {
 					storage[i] = switch commands[i] {
-					case let .call(function, args) where function.storage == nil: Command.call(self, args)
+					case let .call(function, args) where function.storage == nil: VirtualInstruction.call(self, args)
 					default: commands[i]
 					}
 				}
@@ -42,7 +42,7 @@ public struct VirtualFunction {
 		_ name: String,
 		into unit: VirtualUnit,
 		locals: Int = 0,
-		@ArrayBuilder<Command> commands: () -> [Command]
+		@ArrayBuilder<VirtualInstruction> commands: () -> [VirtualInstruction]
 	) {
 		self.init(name, into: unit, locals: locals) { _ in
 			commands()
@@ -53,7 +53,7 @@ public struct VirtualFunction {
 		_ name: String,
 		into unit: VirtualUnit,
 		locals: Int = 0,
-		commands: [Command]
+		commands: [VirtualInstruction]
 	) {
 		self.init(name, into: unit, locals: locals) { _ in
 			commands
@@ -111,14 +111,14 @@ extension VirtualFunction: Sequence {
 	}
 
 	public struct Iterator: IteratorProtocol {
-		@usableFromInline let storage: ManagedBuffer<Header, Command>
+		@usableFromInline let storage: ManagedBuffer<Header, VirtualInstruction>
 		@usableFromInline var i = 0
 
-		@usableFromInline init(storage: ManagedBuffer<Header, Command>) {
+		@usableFromInline init(storage: ManagedBuffer<Header, VirtualInstruction>) {
 			self.storage = storage
 		}
 
-		@_transparent public mutating func next() -> Command? {
+		@_transparent public mutating func next() -> VirtualInstruction? {
 			guard i < storage.header.body else { return nil }
 			return storage.withUnsafeMutablePointerToElements {
 				defer { i += 1 }
@@ -145,7 +145,7 @@ extension VirtualFunction: Collection {
 		i + 1
 	}
 
-	public subscript(position: Int) -> Command {
+	public subscript(position: Int) -> VirtualInstruction {
 		@_transparent get {
 			precondition(position < endIndex, "Index out of bounds")
 			return storage.withUnsafeMutablePointerToElements {

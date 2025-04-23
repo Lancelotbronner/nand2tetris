@@ -113,7 +113,7 @@ extension VirtualMachine {
 	}
 
 	/// Executes a single instruction
-	@inlinable public func execute(_ command: Command) {
+	@inlinable public func execute(_ command: VirtualInstruction) {
 		switch command {
 		case .add: add()
 		case .sub: sub()
@@ -211,11 +211,11 @@ extension VirtualMachine {
 	}
 
 	@_transparent public var popb: Bool {
-		pop == Command.true
+		pop == VirtualInstruction.true
 	}
 
 	@_transparent public func push(_ value: Bool) {
-		push(value ? Command.true : Command.false)
+		push(value ? VirtualInstruction.true : VirtualInstruction.false)
 	}
 
 	/// Peeks at the top of the global stack
@@ -225,7 +225,7 @@ extension VirtualMachine {
 
 	/// Peeks at the top of the global stack
 	@_transparent public var peekb: Bool {
-		peek == Command.true
+		peek == VirtualInstruction.true
 	}
 
 	/// Peeks further in the global stack, starting from the top
@@ -235,7 +235,7 @@ extension VirtualMachine {
 
 	/// Peeks further in the global stack, starting from the top
 	@_transparent public func peekb(_ back: Int) -> Bool {
-		peek(back) == Command.true
+		peek(back) == VirtualInstruction.true
 	}
 
 	//MARK: - Memory Segments
