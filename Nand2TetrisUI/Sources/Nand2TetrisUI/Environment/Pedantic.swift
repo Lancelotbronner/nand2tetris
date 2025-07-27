@@ -8,7 +8,7 @@
 #if canImport(SwiftUI)
 import SwiftUI
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
 	@Entry var pedantic = true
 }
 #endif

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Nand2TetrisKit
+import Nand2TetrisUI
 
 struct VirtualInstructionLabel: View {
 	@Environment(\.pedantic) private var pedantic

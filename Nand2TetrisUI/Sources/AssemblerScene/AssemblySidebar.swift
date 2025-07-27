@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Nand2TetrisUI
 
 struct AssemblyAssistantSidebar: View {
 	@State private var tab = Tab.program

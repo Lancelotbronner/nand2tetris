@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
-import Nand2TetrisKit
-import Nand2TetrisCompanionKit
+
+import EmulatorScene
+import VirtualMachineScene
+import AssemblerScene
 
 @main struct Nand2TetrisApp: App {
 	var body: some Scene {

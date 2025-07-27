@@ -1,26 +1,40 @@
 //
 //  VirtualAssembly.swift
-//  Nand2TetrisCompanionKit
+//  Nand2Tetris
 //
-//  Created by Christophe Bronner on 2024-08-13.
+//  Created by Christophe Bronner on 2023-12-15.
 //
 
-import SwiftUI
+public enum VirtualAssembly: Sendable {
 
-@Observable
-public final class VirtualAssemblyModel {
+	//MARK: - Arithmetic Commands
 
-	public init() { }
+	case add
+	case sub
+	case neg
 
-	/// Source code of the VM code.
-	public var source = "" {
-		didSet { lines = source.split(separator: "\n", omittingEmptySubsequences: false) }
-	}
+	case eq
+	case gt
+	case lt
 
-	public var lines: [Substring] = []
+	case and
+	case or
+	case not
 
-}
+	//MARK: - Memory Commands
 
-extension EnvironmentValues {
-	@Entry var virtualAssembly = VirtualAssemblyModel()
+	case push(segment: MemorySegment, offset: UInt16)
+	case pop(segment: MemorySegment, offset: UInt16)
+
+	//MARK: - Flow Commands
+
+	case label(label: String)
+	case goto(label: String)
+	case ifgoto(label: String)
+
+	//MARK: - Function Commands
+
+	case function(name: String, locals: UInt16)
+	case call(name: String, args: UInt16)
+	case `return`
 }

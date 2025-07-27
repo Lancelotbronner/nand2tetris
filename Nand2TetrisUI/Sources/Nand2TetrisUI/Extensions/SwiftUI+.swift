@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  SwiftUI+.swift
+//  Nand2TetrisUI
 //
 //  Created by Christophe Bronner on 2024-04-19.
 //

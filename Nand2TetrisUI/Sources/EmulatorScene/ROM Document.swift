@@ -8,6 +8,7 @@
 #if canImport(SwiftUI) && canImport(UniformTypeIdentifiers)
 import SwiftUI
 import UniformTypeIdentifiers
+import Nand2TetrisUI
 
 public struct ROMDocument: FileDocument {
 	public static let readableContentTypes: [UTType] = [.romN2T]

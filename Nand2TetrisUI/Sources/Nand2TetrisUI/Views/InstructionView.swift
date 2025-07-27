@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  InstructionView.swift
+//  Nand2TetrisUI
 //
 //  Created by Christophe Bronner on 2023-08-28.
 //

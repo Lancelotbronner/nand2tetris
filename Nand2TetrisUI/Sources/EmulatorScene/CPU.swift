@@ -6,6 +6,7 @@
 //
 
 import Nand2TetrisKit
+import Nand2TetrisUI
 
 #if canImport(SwiftUI)
 import SwiftUI

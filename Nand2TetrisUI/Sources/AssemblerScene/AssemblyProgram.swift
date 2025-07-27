@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Nand2TetrisKit
+import Nand2TetrisUI
 
 public struct AssemblyProgramView: View {
 	@Environment(\.assembler) private var assembler: Assembler

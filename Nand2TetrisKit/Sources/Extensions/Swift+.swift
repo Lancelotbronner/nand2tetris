@@ -1,18 +1,55 @@
 //
-//  File.swift
-//  
+//  Swift+.swift
+//  Nand2TetrisKit
 //
-//  Created by Christophe Bronner on 2024-04-19.
+//  Created by Christophe Bronner on 2023-10-19.
 //
 
-extension Sequence {
+extension Bool {
 
-	@inlinable public func sorted<T: Comparable>(by field: KeyPath<Element, T>, using compare: (T, T) -> Bool) -> [Element] {
-		sorted { compare($0[keyPath: field], $1[keyPath: field]) }
+	@_transparent public var not: Bool {
+		!self
 	}
 
-	@inlinable public func sorted(by field: KeyPath<Element, some Comparable>) -> [Element] {
-		sorted(by: field, using: <)
+}
+
+extension Character {
+
+	var isPedanticInteger: Bool {
+		("0"..."9").contains(self)
+	}
+
+	var isExtendedInteger: Bool {
+		isPedanticInteger || self == "_" || self == "'"
+	}
+
+	func isInteger(pedantic: Bool) -> Bool {
+		pedantic ? isPedanticInteger : isExtendedInteger
+	}
+
+}
+
+extension OptionSet {
+
+	@inlinable public subscript(value: Element) -> Bool {
+		get { contains(value) }
+		set {
+			if newValue {
+				insert(value)
+			} else {
+				remove(value)
+			}
+		}
+	}
+
+}
+
+extension MutableCollection where Element: FixedWidthInteger {
+
+	public mutating func randomize() {
+		for i in indices {
+			self[i] = Element.random(in: Element.min...Element.max)
+		}
 	}
 
 }
