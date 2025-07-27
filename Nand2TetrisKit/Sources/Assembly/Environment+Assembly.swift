@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-@preconcurrency import Nand2TetrisKit
+import Nand2TetrisKit
 
 private struct AssemblerKey: EnvironmentKey {
 	static let defaultValue = Assembler()

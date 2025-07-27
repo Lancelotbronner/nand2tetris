@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  ObservableMachine.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2022-08-28.
 //
@@ -8,7 +8,8 @@
 import Observation
 
 @available(macOS 14, *)
-@Observable public final class ObservableMachine: Machine {
+@Observable
+public final class ObservableMachine: Machine, @unchecked Sendable {
 
 	public init(rom: Int = Hack.memory, ram: Int = Hack.memory) {
 		self.rom = Array(repeating: 0, count: rom)
@@ -23,5 +24,4 @@ import Observation
 
 	public var rom: [UInt16]
 	public var ram: [UInt16]
-
 }

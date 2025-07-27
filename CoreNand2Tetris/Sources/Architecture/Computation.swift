@@ -1,30 +1,26 @@
 //
 //  Computation.swift
-//  CoreNand2Tetris
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct Computation: RawRepresentable, OptionSet, Hashable {
-
-	public static let mask: UInt16 = 0x1FC0
-
+public struct Computation: RawRepresentable, OptionSet, Hashable, CaseIterable, Sendable {
 	public var rawValue: UInt16
 
-	@inlinable
-	public init(rawValue: UInt16) {
+	@inlinable public init(rawValue: UInt16) {
 		self.rawValue = rawValue
 	}
 
-	@inlinable
-	public init(mask rawValue: UInt16) {
+	@inlinable public init(mask rawValue: UInt16) {
 		self.init(rawValue: rawValue & Computation.mask)
 	}
 
-	@inlinable
-	public init(bitPattern rawValue: UInt16) {
+	@inlinable public init(bitPattern rawValue: UInt16) {
 		self.init(rawValue: (rawValue & 0x7F) << 6)
 	}
+
+	public static let mask: UInt16 = 0x1FC0
 
 	public static let legal: Set<Computation> = [
 		.zero, .one, .minusOne, .x, .y, .y.indirect, .notX, .notY, .notY.indirect, .negX, .negY, .negY.indirect, .incX, .incY, .incY.indirect, .decX, .decY, .decY.indirect, .add, .add.indirect, .subY, .subY.indirect, .subX, .subX.indirect, .and, .and.indirect, .or, .or.indirect

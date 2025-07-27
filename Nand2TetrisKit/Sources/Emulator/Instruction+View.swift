@@ -17,8 +17,7 @@ public struct InstructionView: View {
 		_instruction = instruction
 	}
 
-	@inlinable
-	public init(_ instruction: Instruction) {
+	@inlinable public init(_ instruction: Instruction) {
 		self.init(.constant(instruction))
 	}
 

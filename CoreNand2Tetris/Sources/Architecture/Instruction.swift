@@ -1,19 +1,14 @@
 //
 //  Instruction.swift
-//  CoreNand2Tetris
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct Instruction: RawRepresentable, Hashable {
-
-	public static let nop = Instruction(assign: .zero)
-	public static let zero = Instruction(rawValue: 0)
-
+public struct Instruction: RawRepresentable, Hashable, Sendable {
 	public var rawValue: UInt16
 
-	@inlinable
-	public init(rawValue: UInt16) {
+	@inlinable public init(rawValue: UInt16) {
 		self.rawValue = rawValue
 	}
 
@@ -22,14 +17,16 @@ public struct Instruction: RawRepresentable, Hashable {
 		self.rawValue = UInt16(bitPattern: rawValue)
 	}
 
+	public static let nop = Instruction(assign: .zero)
+	public static let zero = Instruction(rawValue: 0)
+
 	//MARK: - Instruction
 
 	public static let maskA: UInt16 = 0x8000
 	public static let maskC: UInt16 = 0xE000
 
 	/// Whether the instruction is a computing or addressing operation.
-	@inlinable
-	public var mode: Bool {
+	@inlinable public var mode: Bool {
 		get { rawValue & Instruction.maskA != 0 }
 		set {
 			if newValue {
@@ -42,39 +39,33 @@ public struct Instruction: RawRepresentable, Hashable {
 
 	//MARK: - Adressing Instruction
 
-	@inlinable
-	public init(addressing value: UInt16) {
+	@inlinable public init(addressing value: UInt16) {
 		self.init(rawValue: value & 0x7FFF)
 	}
 
 	/// Whether the instruction is an addressing operation.
-	@inlinable
-	public var isAddressing: Bool {
+	@inlinable public var isAddressing: Bool {
 		!mode
 	}
 
 	/// The value literal of an adressing instruction
-	@inlinable
-	public var immediate: UInt16 {
+	@inlinable public var immediate: UInt16 {
 		rawValue & 0x7FFF
 	}
 
 	//MARK: - Computing Instruction
 
-	@inlinable
-	public init(assign computation: Computation, to destination: Destination = .null, jump: Jump = .none) {
+	@inlinable public init(assign computation: Computation, to destination: Destination = .null, jump: Jump = .none) {
 		self.init(rawValue: Instruction.maskC | computation.rawValue | destination.rawValue | jump.rawValue)
 	}
 
 	/// Whether the instruction is a computing operation.
-	@inlinable
-	public var isComputing: Bool {
+	@inlinable public var isComputing: Bool {
 		mode
 	}
 
 	/// The computation of this instruction
-	@inlinable
-	public var computation: Computation {
+	@inlinable public var computation: Computation {
 		get { Computation(mask: rawValue) }
 		set { 
 			rawValue &= ~Computation.mask
@@ -84,57 +75,49 @@ public struct Instruction: RawRepresentable, Hashable {
 	}
 
 	/// Whether the instruction is indirect (`M[A]` rather than `A`)
-	@inlinable
-	public var i: Bool {
+	@inlinable public var i: Bool {
 		get { computation.contains(Computation.i) }
 		set { computation[Computation.i] = newValue }
 	}
 
 	/// Whether to zero the first operand
-	@inlinable
-	public var zx: Bool {
+	@inlinable public var zx: Bool {
 		get { computation.contains(Computation.zx) }
 		set { computation[Computation.zx] = newValue }
 	}
 
 	/// Whether to invert the first operand
-	@inlinable
-	public var nx: Bool {
+	@inlinable public var nx: Bool {
 		get { computation.contains(Computation.nx) }
 		set { computation[Computation.nx] = newValue }
 	}
 
 	/// Whether to zero the second operand
-	@inlinable
-	public var zy: Bool {
+	@inlinable public var zy: Bool {
 		get { computation.contains(Computation.zy) }
 		set { computation[Computation.zy] = newValue }
 	}
 
 	/// Whether to invert the second operand
-	@inlinable
-	public var ny: Bool {
+	@inlinable public var ny: Bool {
 		get { computation.contains(Computation.ny) }
 		set { computation[Computation.ny] = newValue }
 	}
 
 	/// Whether to `ADD` or `AND` the operands
-	@inlinable
-	public var f: Bool  {
+	@inlinable public var f: Bool  {
 		get { computation.contains(Computation.f) }
 		set { computation[Computation.f] = newValue }
 	}
 
 	/// Whether to invert the output
-	@inlinable
-	public var no: Bool {
+	@inlinable public var no: Bool {
 		get { computation.contains(Computation.no) }
 		set { computation[Computation.no] = newValue }
 	}
 
 	/// The destination of this instruction
-	@inlinable
-	public var destination: Destination {
+	@inlinable public var destination: Destination {
 		get { Destination(mask: rawValue) }
 		set {
 			rawValue &= ~Destination.mask
@@ -144,29 +127,25 @@ public struct Instruction: RawRepresentable, Hashable {
 	}
 
 	/// Whether to store the result in the address register (`A`)
-	@inlinable
-	public var a: Bool {
+	@inlinable public var a: Bool {
 		get { destination.contains(Destination.a) }
 		set { destination[Destination.a] = newValue }
 	}
 
 	/// Whether to store the result to memory (`M[A]`)
-	@inlinable
-	public var m: Bool {
+	@inlinable public var m: Bool {
 		get { destination.contains(Destination.m) }
 		set { destination[Destination.m] = newValue }
 	}
 
 	/// Whether to store the result to the data register (`D`)
-	@inlinable
-	public var d: Bool {
+	@inlinable public var d: Bool {
 		get { destination.contains(Destination.d) }
 		set { destination[Destination.d] = newValue }
 	}
 
 	/// The jump of this instruction
-	@inlinable
-	public var jump: Jump {
+	@inlinable public var jump: Jump {
 		get { Jump(mask: rawValue) }
 		set {
 			rawValue &= ~Jump.mask
@@ -176,28 +155,24 @@ public struct Instruction: RawRepresentable, Hashable {
 	}
 
 	/// Whether this instruction may jump.
-	@inlinable
-	public var hasJump: Bool {
+	@inlinable public var hasJump: Bool {
 		!jump.isEmpty
 	}
 
 	/// Jump if the output is greater than 0
-	@inlinable
-	public var gt: Bool {
+	@inlinable public var gt: Bool {
 		get { jump.contains(Jump.jgt) }
 		set { jump[Jump.jgt] = newValue }
 	}
 
 	/// Jump if the output is equal to 0
-	@inlinable
-	public var eq: Bool {
+	@inlinable public var eq: Bool {
 		get { jump.contains(Jump.jeq) }
 		set { jump[Jump.jeq] = newValue }
 	}
 
 	/// Jump if the output is lower than 0
-	@inlinable
-	public var lt: Bool {
+	@inlinable public var lt: Bool {
 		get { jump.contains(Jump.jlt) }
 		set { jump[Jump.jlt] = newValue }
 	}
@@ -223,25 +198,21 @@ public struct Instruction: RawRepresentable, Hashable {
 
 extension Instruction: ExpressibleByIntegerLiteral, ExpressibleByStringLiteral {
 
-	@inlinable
-	public init(integerLiteral value: UInt16) {
+	@inlinable public init(integerLiteral value: UInt16) {
 		self.init(rawValue: value)
 	}
 
-	@inlinable
-	public init(stringLiteral value: String) {
+	@inlinable public init(stringLiteral value: String) {
 		self.init(value)!
 	}
 
-	@inlinable
-	public var binary: String {
+	@inlinable public var binary: String {
 		let description = String(rawValue, radix: 2)
 		let padding = String(repeating: "0", count: 16 - description.count)
 		return padding + description
 	}
 
-	@inlinable
-	public var hex: String {
+	@inlinable public var hex: String {
 		let description = String(rawValue, radix: 16)
 		let padding = String(repeating: "0", count: 4 - description.count)
 		return padding + description

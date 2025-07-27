@@ -6,7 +6,6 @@
 //
 
 public enum VirtualInstruction: ExpressibleByIntegerLiteral, Hashable {
-
 	public static let `true` = Int16.max
 	public static let `false` = Int16.min
 

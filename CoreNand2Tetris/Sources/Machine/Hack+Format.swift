@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  Hack+Format.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2022-08-28.
 //
@@ -8,9 +8,9 @@
 #if canImport(Foundation)
 import Foundation
 
-extension Hack {
+public extension Hack {
 
-	public struct ParseStrategy: Foundation.ParseStrategy {
+	struct ParseStrategy: Foundation.ParseStrategy, Sendable {
 		public var pedantic: Bool
 		
 		public init(pedantic: Bool) {
@@ -43,7 +43,7 @@ extension Hack {
 		}
 	}
 	
-	public struct BinaryFormat: ParseableFormatStyle {
+	struct BinaryFormat: ParseableFormatStyle, Sendable {
 		public var parseStrategy: ParseStrategy
 		
 		public init(pedantic: Bool) {
@@ -56,7 +56,7 @@ extension Hack {
 		}
 	}
 
-	public struct HexadecimalFormat: ParseableFormatStyle {
+	struct HexadecimalFormat: ParseableFormatStyle, Sendable {
 		public var parseStrategy: ParseStrategy
 
 		public init(pedantic: Bool) {
@@ -68,7 +68,7 @@ extension Hack {
 		}
 	}
 
-	public struct UnsignedFormat: ParseableFormatStyle {
+	struct UnsignedFormat: ParseableFormatStyle, Sendable {
 		public var parseStrategy: ParseStrategy
 
 		public init(pedantic: Bool) {
@@ -80,7 +80,7 @@ extension Hack {
 		}
 	}
 
-	public struct SignedFormat: ParseableFormatStyle {
+	struct SignedFormat: ParseableFormatStyle, Sendable {
 		public var parseStrategy: ParseStrategy
 
 		public init(pedantic: Bool) {
@@ -92,7 +92,7 @@ extension Hack {
 		}
 	}
 
-	public struct AssemblyFormat: ParseableFormatStyle {
+	struct AssemblyFormat: ParseableFormatStyle, Sendable {
 		public var parseStrategy: ParseStrategy
 
 		public init(pedantic: Bool) {
@@ -112,9 +112,6 @@ extension Hack {
 
 @available(macOS 14, *)
 extension FormatStyle where FormatInput == UInt16, FormatOutput == String {
-
 	public static var assembly: Hack.AssemblyFormat { .init(pedantic: false) }
-
 }
-
 #endif

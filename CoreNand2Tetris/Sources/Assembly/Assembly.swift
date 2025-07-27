@@ -1,12 +1,11 @@
 //
-//  File.swift
-//  
+//  Assembly.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2023-10-18.
 //
 
-public struct Assembly {
-
+public struct Assembly: Sendable {
 	/// The source text which produced this assembly
 	public var source: Substring
 
@@ -27,12 +26,19 @@ public struct Assembly {
 
 	/// The comment of this line, if any
 	public var comment: Substring?
-
 }
 
-extension Assembly {
+public extension Assembly {
 
-	public static func parse(line source: Substring, pedantic: Bool = true) throws -> Assembly {
+	static let defaultSymbols: [Substring : Instruction] = [
+		"R0": 0, "R1": 1, "R2": 2, "R3": 3, "R4": 4, "R5": 5,
+		"R6": 6, "R7": 7, "R8": 8, "R9": 9, "R10": 10, "R11": 11,
+		"R12": 12, "R13": 13, "R14": 14, "R15": 15,
+		"SP": 0, "LCL": 1, "ARG": 2, "THIS": 3, "THAT": 4,
+		"SCREEN": 16384, "KBD": 24576,
+	]
+
+	static func parse(line source: Substring, pedantic: Bool = true) throws -> Assembly {
 		var assembly = Assembly(source: source, line: 0)
 
 		var source = source.trimmingPrefix(while: \.isWhitespace)
@@ -67,14 +73,14 @@ extension Assembly {
 		return assembly
 	}
 
-	public static func parse(symbol source: inout Substring, pedantic: Bool = true) throws -> Substring? {
+	static func parse(symbol source: inout Substring, pedantic: Bool = true) throws -> Substring? {
 		guard source.first == "@" else { return nil }
 		let symbol = source.dropFirst()
 		guard symbol.contains(where: \.isPedanticInteger.not) else { return nil }
 		return symbol
 	}
 
-	public static func parse(label source: inout Substring, pedantic: Bool = true) throws -> Substring? {
+	static func parse(label source: inout Substring, pedantic: Bool = true) throws -> Substring? {
 		guard source.first == "(" else { return nil }
 		guard source.last == ")" else {
 			throw AssemblyError.labelMissingClosingParenthesis(label: source.dropFirst())
@@ -84,7 +90,7 @@ extension Assembly {
 		return label
 	}
 
-	public static func parse(comment source: inout Substring, pedantic: Bool = true) -> Substring? {
+	static func parse(comment source: inout Substring, pedantic: Bool = true) -> Substring? {
 		if source.starts(with: "//") {
 			defer { source.removeAll() }
 			return source.dropFirst(2)

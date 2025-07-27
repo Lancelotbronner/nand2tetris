@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  Foundation+.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2022-08-28.
 //

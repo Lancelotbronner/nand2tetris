@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Computation+Assembly.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2023-10-18.
 //
@@ -69,8 +69,7 @@ extension Computation: LosslessStringConvertible {
 
 	//MARK: - Describing
 
-	@inlinable
-	public static func describe(operand x: String, zero z: Bool, negate n: Bool) -> String {
+	@inlinable public static func describe(operand x: String, zero z: Bool, negate n: Bool) -> String {
 		switch (z, n) {
 		case (false, false): x
 		case (false, true): "!" + x
@@ -79,23 +78,19 @@ extension Computation: LosslessStringConvertible {
 		}
 	}
 
-	@inlinable
-	public static func describe(output o: String, negate n: Bool) -> String {
+	@inlinable public static func describe(output o: String, negate n: Bool) -> String {
 		n ? "!(\(o))" : o
 	}
 
-	@inlinable
-	public var formattedX: String {
+	@inlinable public var formattedX: String {
 		Computation.describe(operand: "D", zero: contains(.zx), negate: contains(.nx))
 	}
 
-	@inlinable
-	public var formattedY: String {
+	@inlinable public var formattedY: String {
 		Computation.describe(operand: contains(.i) ? "M" : "A", zero: contains(.zy), negate: contains(.ny))
 	}
 
-	@inlinable
-	public var formattedOp: String {
+	@inlinable public var formattedOp: String {
 		contains(.f) ? "+" : "&"
 	}
 

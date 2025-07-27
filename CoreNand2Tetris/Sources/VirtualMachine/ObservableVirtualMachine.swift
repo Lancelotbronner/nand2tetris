@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  ObservableVirtualMachine.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2023-12-15.
 //
@@ -8,7 +8,8 @@
 import Observation
 
 @available(macOS 14.0, *)
-@Observable public final class ObservableVirtualMachine: VirtualMachine {
+@Observable
+public final class ObservableVirtualMachine: VirtualMachine {
 
 	public init() { }
 

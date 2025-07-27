@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Assembler.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2023-10-18.
 //
@@ -8,8 +8,7 @@
 import Observation
 
 @Observable
-public final class Assembler {
-
+public final class Assembler: @unchecked Sendable {
 	public init(pedantic: Bool = true) {
 		self.pedantic = pedantic
 	}
@@ -118,8 +117,7 @@ extension Assembler {
 		diagnose(error, from: source, at: line)
 	}
 
-	@inlinable
-	public func process(line source: Substring) {
+	@inlinable public func process(line source: Substring) {
 		line += 1
 		do {
 			let assembly = try Assembly.parse(line: source, pedantic: pedantic)
@@ -129,8 +127,7 @@ extension Assembler {
 		} catch { }
 	}
 
-	@inlinable
-	public func process(_ source: Substring) {
+	@inlinable public func process(_ source: Substring) {
 		var source = source
 		while let l = source.firstIndex(where: \.isNewline) {
 			let line = source[..<l]
@@ -143,8 +140,7 @@ extension Assembler {
 		}
 	}
 
-	@inlinable
-	public func process(_ source: some StringProtocol) {
+	@inlinable public func process(_ source: some StringProtocol) {
 		process(Substring(source))
 	}
 
@@ -153,9 +149,8 @@ extension Assembler {
 #if canImport(Foundation)
 import Foundation
 
-extension Assembler {
-	@inlinable
-	public func append(data: Data) {
+public extension Assembler {
+	@inlinable func append(data: Data) {
 		append(data.read(as: Instruction.self))
 	}
 }

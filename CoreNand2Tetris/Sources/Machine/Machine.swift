@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Machine.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2024-02-28.
 //
@@ -35,24 +35,24 @@ public protocol Machine: AnyObject {
 
 }
 
-extension Machine {
+public extension Machine {
 
 	//MARK: - CPU
 
 	/// The instruction to be executed.
 	@inlinable @inline(__always)
-	public var instruction: Instruction {
+	var instruction: Instruction {
 		Instruction(rawValue: rom[Int(pc)])
 	}
 
 	/// The value pointed to by ``a``.
-	public var m: UInt16 {
+	var m: UInt16 {
 		_read { yield ram[Int(a)] }
 		_modify { yield &ram[Int(a)] }
 	}
 
 	/// Executes a single CPU cycle.
-	public func cycle() {
+	func cycle() {
 		flags = CycleFlags(instruction)
 		switch instruction.isAddressing {
 		case true:
@@ -90,12 +90,12 @@ extension Machine {
 	//MARK: - ALU
 
 	/// The first operand of the current instruction, always the ``d`` register.
-	@inlinable public var x: Int16 {
+	@inlinable var x: Int16 {
 		Int16(bitPattern: d)
 	}
 
 	/// The first operand of the current ALU operation, with ``Instruction/zx`` and ``Instruction/nx`` applied.
-	@inlinable public var lhs: Int16 {
+	@inlinable var lhs: Int16 {
 		var x = x
 		x = instruction.zx ? 0 : x
 		x = instruction.nx ? ~x : x
@@ -103,12 +103,12 @@ extension Machine {
 	}
 
 	/// The second operand of the current instruction, either the ``a`` or ``m`` register according to ``Instruction/i``.
-	@inlinable public var y: Int16 {
+	@inlinable var y: Int16 {
 		Int16(bitPattern: instruction.i ? m : a)
 	}
 
 	/// The second operand of the current ALU operation, with ``Instruction/zy`` and ``Instruction/ny`` applied.
-	@inlinable public var rhs: Int16 {
+	@inlinable var rhs: Int16 {
 		var y = y
 		y = instruction.zy ? 0 : y
 		y = instruction.ny ? ~y : y
@@ -116,17 +116,17 @@ extension Machine {
 	}
 
 	/// The character of the current ALU operation, either `+` or `&` according to ``Instruction/f``.
-	@inlinable public var op: Character {
+	@inlinable var op: Character {
 		instruction.f ? "+" : "&"
 	}
 
 	/// The result of the current ALU operation **before** applying ``Instruction/no``.
-	@inlinable public var result: Int16 {
+	@inlinable var result: Int16 {
 		instruction.f ? lhs + rhs : lhs & rhs;
 	}
 
 	/// The current result of the ALU.
-	@inlinable public var o: Int16 {
+	@inlinable var o: Int16 {
 		instruction.no ? ~result : result
 	}
 
@@ -134,13 +134,13 @@ extension Machine {
 
 	/// Whether the ALU resulted in a zero
 	@inlinable @inline(__always)
-	public var zr: Bool {
+	var zr: Bool {
 		flags.contains(.zr)
 	}
 
 	/// Whether the ALU resulted in a negative value
 	@inlinable @inline(__always)
-	public var ng: Bool {
+	var ng: Bool {
 		flags.contains(.ng)
 	}
 
@@ -148,14 +148,14 @@ extension Machine {
 
 	/// The keyboard register.
 	@inlinable @inline(__always)
-	public var screen: ArraySlice<UInt16> {
+	var screen: ArraySlice<UInt16> {
 		_read { yield ram[16384..<24576] }
 		_modify { yield &ram[16384..<24576] }
 	}
 
 	/// The keyboard register.
 	@inlinable @inline(__always)
-	public var keyboard: UInt16 {
+	var keyboard: UInt16 {
 		_read { yield ram[24576] }
 		_modify { yield &ram[24576] }
 	}
@@ -164,8 +164,7 @@ extension Machine {
 
 //MARK: - Cycle Flags
 
-public struct CycleFlags: RawRepresentable, OptionSet {
-
+public struct CycleFlags: RawRepresentable, OptionSet, Codable, Sendable {
 	public var rawValue: UInt8
 
 	public init(rawValue: UInt8) {
@@ -200,5 +199,4 @@ public struct CycleFlags: RawRepresentable, OptionSet {
 
 	/// Whether the instruction jumped
 	public static let jmp = CycleFlags(rawValue: 0x40)
-
 }

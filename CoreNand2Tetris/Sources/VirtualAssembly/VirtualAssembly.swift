@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2023-12-15.
 //
 
-public enum VirtualAssembly {
+public enum VirtualAssembly: Sendable {
 
 	//MARK: - Arithmetic Commands
 
@@ -37,5 +37,4 @@ public enum VirtualAssembly {
 	case function(name: String, locals: UInt16)
 	case call(name: String, args: UInt16)
 	case `return`
-
 }

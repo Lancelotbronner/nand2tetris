@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Swift+.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2023-10-19.
 //
@@ -31,8 +31,7 @@ extension Character {
 
 extension OptionSet {
 
-	@inlinable
-	public subscript(value: Element) -> Bool {
+	@inlinable public subscript(value: Element) -> Bool {
 		get { contains(value) }
 		set {
 			if newValue {

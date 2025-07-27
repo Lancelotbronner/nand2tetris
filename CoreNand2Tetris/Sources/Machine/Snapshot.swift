@@ -1,53 +1,50 @@
 //
-//  File.swift
-//
+//  Snapshot.swift
+//  Nand2TetrisKit
 //
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct EmulatorSnapshot {
+public struct EmulatorSnapshot: Codable, Sendable {
 
-	public init() {
-		title = ""
-		pc = 0
-		d = 0
-		a = 0
-		rom = []
-		ram = []
-	}
+	public init() {}
 
 	public init(_ title: String, of emulator: some Machine) {
 		self.title = title
 		pc = emulator.pc
 		d = emulator.d
 		a = emulator.a
+		flags = emulator.flags
 		rom = emulator.rom
 		ram = emulator.ram
 	}
 
 	/// Arbitrary title for the snapshot, such as the loaded file or a labeled bugged state.
-	public var title: String
+	public var title = ""
 
 	//MARK: - CPU
 
 	/// The program counter.
-	public var pc: UInt16
+	public var pc: UInt16 = 0
 
 	/// The data register.
-	public var d: UInt16
+	public var d: UInt16 = 0
 
 	/// The address register.
-	public var a: UInt16
+	public var a: UInt16 = 0
+
+	/// Flags from the previous cycle.
+	public var flags: CycleFlags = []
 
 	//MARK: - ROM
 
 	/// The read-only memory of the computer
-	public var rom: [UInt16]
+	public var rom: [UInt16] = []
 
 	//MARK: - RAM
 
 	/// The read-write memory of the computer
-	public var ram: [UInt16]
+	public var ram: [UInt16] = []
 
 }
 
@@ -66,13 +63,14 @@ extension EmulatorSnapshot {
 		pc = data.consume() ?? 0
 		d = data.consume() ?? 0
 		a = data.consume() ?? 0
+		flags = data.consume() ?? []
 		rom = data.consume(Hack.memory)
 		ram = data.consume(Hack.memory)
 	}
 
 	public var data: Data {
 		var data = Data()
-		data.reserveCapacity(Hack.memory * 2 + 6 + title.count * 2)
+		data.reserveCapacity(Hack.memory * 2 + 7 + title.count * 2)
 		if let title = title.data(using: .utf8) {
 			data.append(title)
 		}
@@ -80,6 +78,7 @@ extension EmulatorSnapshot {
 		data.append(bytesOf: pc)
 		data.append(bytesOf: d)
 		data.append(bytesOf: a)
+		data.append(bytesOf: flags)
 		rom.withUnsafeBytes { buffer in
 			data.append(buffer.bindMemory(to: UInt8.self))
 		}
