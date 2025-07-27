@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Sidebar.swift
+//  VirtualMachineUI
 //
 //  Created by Christophe Bronner on 2023-12-25.
 //
@@ -9,34 +9,25 @@ import SwiftUI
 import Nand2TetrisKit
 
 struct VirtualMachineSidebar: View {
-	@State private var tab = Tab.program
-
-	init() { }
-
 	var body: some View {
-		Divider()
-		HStack {
-			Toggle(isOn: $tab == .program) {
-				Label("Program", systemImage: "doc.badge.gearshape")
-			}
-			Toggle(isOn: $tab == .callstack) {
-				Label("Callstack", systemImage: "text.line.last.and.arrowtriangle.forward")
-			}
-		}
-		.toggleStyle(.button)
-		.buttonStyle(.borderless)
-		.labelStyle(.iconOnly)
-		Divider()
-		switch tab {
-		case .program: VirtualProgramTab()
-		case .callstack: VirtualCallstackTab()
-		}
-		Spacer()
-	}
+		TabView {
+			Tab("Device", systemImage: "computer") {
 
-	private enum Tab: Int {
-		case program = 1
-		case callstack = 2
+			}
+			TabSection("Debugging") {
+				Tab("Memory", systemImage: "ram") {
+					
+				}
+				Tab("Callstack", systemImage: "text.line.last.and.arrowtriangle.forward") {
+					VirtualCallstackTab()
+				}
+			}
+			TabSection("Program") {
+				Tab("Program", systemImage: "doc.badge.gearshape") {
+					VirtualProgramTab()
+				}
+			}
+		}
 	}
 }
 
@@ -50,4 +41,9 @@ public enum VirtualMachineRoute: Hashable {
 
 	case unit(VirtualUnit)
 	case function(VirtualFunction)
+}
+
+#Preview {
+	VirtualMachineSidebar()
+		.tabViewStyle(.sidebarAdaptable)
 }

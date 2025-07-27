@@ -85,10 +85,13 @@ public struct VirtualUnit {
 
 //MARK: - Identifiable & Hashable
 
-extension VirtualUnit: Identifiable, Hashable {
+extension VirtualUnit: Identifiable, Hashable, Comparable {
 
 	public var id: ObjectIdentifier {
 		ObjectIdentifier(storage)
+	}
+	public static func < (lhs: VirtualUnit, rhs: VirtualUnit) -> Bool {
+		lhs.name < rhs.name
 	}
 
 	public static func == (lhs: VirtualUnit, rhs: VirtualUnit) -> Bool {

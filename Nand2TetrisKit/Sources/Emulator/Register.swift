@@ -102,7 +102,7 @@ public struct Register<Label: View>: View {
 	}
 }
 
-public enum RegisterStyle {
+public enum RegisterStyle: Sendable {
 	case binary
 	case hexadecimal
 	case unsigned
@@ -110,17 +110,8 @@ public enum RegisterStyle {
 	case assembly
 }
 
-private struct DefaultRegisterKey: EnvironmentKey {
-	static var defaultValue = RegisterStyle.signed
-}
-
 extension EnvironmentValues {
-
-	internal var defaultRegisterStyle: RegisterStyle {
-		_read { yield self[DefaultRegisterKey.self] }
-		_modify { yield &self[DefaultRegisterKey.self] }
-	}
-
+	@Entry var defaultRegisterStyle = RegisterStyle.signed
 }
 
 #Preview {

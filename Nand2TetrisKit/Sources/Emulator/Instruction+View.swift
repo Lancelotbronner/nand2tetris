@@ -70,6 +70,7 @@ public struct InstructionView: View {
 		.toggleStyle(.text)
 		.foregroundStyle(.primary, .tertiary)
 		.fixedSize(horizontal: false, vertical: true)
+		.disabled(instruction.isAddressing)
 	}
 }
 #endif

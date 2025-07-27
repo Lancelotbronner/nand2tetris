@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2023-07-31.
 //
 
-import Nand2TetrisKit
+@preconcurrency import Nand2TetrisKit
 
 #if canImport(SwiftUI)
 import SwiftUI
@@ -65,7 +65,7 @@ internal struct MachineToolbar: ToolbarContent {
 		guard simulating == nil else { return }
 		simulating = Task.detached(priority: .low) {
 			while !Task.isCancelled {
-				vm.cycle()
+				await vm.cycle()
 			}
 		}
 	}
@@ -79,9 +79,10 @@ internal struct MachineToolbar: ToolbarContent {
 		(simulating == nil ? simulate : pause)()
 	}
 
+	@MainActor
 	private func reset() {
-		Task.detached(priority: .high) {
-			simulating?.cancel()
+		simulating?.cancel()
+		Task {
 			await simulating?.value
 			simulating = nil
 			vm.pc = 0

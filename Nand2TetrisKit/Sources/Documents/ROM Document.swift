@@ -10,7 +10,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 public struct ROMDocument: FileDocument {
-	public static var readableContentTypes: [UTType] = [.romN2T]
+	public static let readableContentTypes: [UTType] = [.romN2T]
 
 	public var contents: [UInt16]
 

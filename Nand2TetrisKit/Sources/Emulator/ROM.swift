@@ -74,10 +74,18 @@ private struct CellROM: View {
 				Text(vm.rom[address], format: Hack.AssemblyFormat(pedantic: pedantic))
 			}
 		}
-		.foregroundStyle(address == vm.pc ? Color.cyan : Color.primary)
+		.foregroundStyle(foregroundColor)
 		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 		.contentShape(Rectangle())
 		.onTapGesture { editing = address }
+	}
+
+	private var foregroundColor: Color {
+		switch true {
+		case address == vm.pc: .cyan
+		case address == vm.a: .yellow
+		default: .primary
+		}
 	}
 }
 

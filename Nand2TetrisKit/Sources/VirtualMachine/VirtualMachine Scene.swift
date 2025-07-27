@@ -9,10 +9,23 @@ import SwiftUI
 import Nand2TetrisKit
 
 public struct VirtualMachineScene: Scene {
-	@State private var vm = ObservableVirtualMachine()
+	@State private var vm = ObservableVirtualMachine.preview
 	@State private var navigation = VirtualMachineNavigation()
 
-	public init() {
+	public init() {}
+
+	public var body: some Scene {
+		Window("Virtual Machine", id: "vm") {
+			VirtualMachineContentView(vm)
+				.environment(vm)
+				.environment(navigation)
+		}
+		.keyboardShortcut("3", modifiers: [.shift, .command])
+	}
+}
+
+extension ObservableVirtualMachine {
+	static var preview: ObservableVirtualMachine {
 		let unit = VirtualUnit("Fibonacci", statics: 0)
 		let function = VirtualFunction("fibonacci", into: unit, locals: 0) {
 			VirtualInstruction.push(.argument, offset: 0)
@@ -40,18 +53,12 @@ public struct VirtualMachineScene: Scene {
 			VirtualInstruction.push(constant: 4)
 			VirtualInstruction.call(function, 1)
 		}
+
+		let vm = ObservableVirtualMachine()
 		vm.insert(function)
 		vm.insert(main)
 		// prime the VM
 		vm.call(main, 0)
-	}
-
-	public var body: some Scene {
-		Window("Virtual Machine", id: "vm") {
-			VirtualMachineContentView(vm)
-				.environment(vm)
-				.environment(navigation)
-		}
-		.keyboardShortcut("3", modifiers: [.shift, .command])
+		return vm
 	}
 }

@@ -10,7 +10,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 public struct AssemblyDocument: FileDocument {
-	public static var readableContentTypes: [UTType] = [.assemblyN2T]
+	public static let readableContentTypes: [UTType] = [.assemblyN2T]
 
 	public var text: String
 

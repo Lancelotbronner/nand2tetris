@@ -133,3 +133,29 @@ public enum VirtualInstruction: ExpressibleByIntegerLiteral, Hashable {
 	}
 
 }
+
+//MARK: - Debugging
+
+extension VirtualInstruction: CustomDebugStringConvertible {
+	public var debugDescription: String {
+		switch self {
+		case .add: "add"
+		case .sub: "sub"
+		case .neg: "neg"
+		case .eq: "eq"
+		case .gt: "gt"
+		case .lt: "lt"
+		case .and: "and"
+		case .or: "or"
+		case .not: "not"
+		case let .push(segment, address): "push \(segment) \(address)"
+		case let .pop(segment, offset): "pop \(segment) \(offset)"
+		case let .goto(address): "goto \(address)"
+		case let .gotor(offset): "goto \(offset > 0 ? "+" : "")\(offset)"
+		case let .if(address): "if \(address)"
+		case let .ifr(offset): "if \(offset > 0 ? "+" : "")\(offset)"
+		case let .call(function, args): "call \(function.name) \(args)"
+		case .return: "return"
+		}
+	}
+}

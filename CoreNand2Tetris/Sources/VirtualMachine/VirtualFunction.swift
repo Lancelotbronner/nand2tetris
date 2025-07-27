@@ -86,10 +86,13 @@ public struct VirtualFunction {
 
 //MARK: - Identifiable & Hashable
 
-extension VirtualFunction: Identifiable, Hashable {
+extension VirtualFunction: Identifiable, Hashable, Comparable {
 
 	public var id: ObjectIdentifier {
 		ObjectIdentifier(storage)
+	}
+	public static func < (lhs: VirtualFunction, rhs: VirtualFunction) -> Bool {
+		lhs.name < rhs.name
 	}
 
 	public static func == (lhs: VirtualFunction, rhs: VirtualFunction) -> Bool {
@@ -131,7 +134,7 @@ extension VirtualFunction: Sequence {
 
 //MARK: - Collection
 
-extension VirtualFunction: Collection {
+extension VirtualFunction: RandomAccessCollection {
 
 	@_transparent public var startIndex: Int {
 		0

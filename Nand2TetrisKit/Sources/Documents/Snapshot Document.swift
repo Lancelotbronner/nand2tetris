@@ -5,14 +5,14 @@
 //  Created by Christophe Bronner on 2023-07-31.
 //
 
-import Nand2TetrisKit
+@preconcurrency import Nand2TetrisKit
 
 #if canImport(SwiftUI) && canImport(UniformTypeIdentifiers)
 import SwiftUI
 import UniformTypeIdentifiers
 
 public struct SnapshotDocument: FileDocument {
-	public static var readableContentTypes: [UTType] = [.snapshotN2T]
+	public static let readableContentTypes: [UTType] = [.snapshotN2T]
 
 	public let snapshot: EmulatorSnapshot
 

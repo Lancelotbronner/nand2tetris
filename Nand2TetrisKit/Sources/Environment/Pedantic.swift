@@ -8,16 +8,7 @@
 #if canImport(SwiftUI)
 import SwiftUI
 
-private struct PedanticKey: EnvironmentKey {
-	static var defaultValue = true
-}
-
 extension EnvironmentValues {
-
-	public var pedantic: Bool {
-		_read { yield self[PedanticKey.self] }
-		_modify { yield &self[PedanticKey.self] }
-	}
-
+	@Entry var pedantic = true
 }
 #endif

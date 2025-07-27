@@ -73,10 +73,17 @@ private struct CellRAM: View {
 				Text(vm.ram[address], format: .number)
 			}
 		}
-		.foregroundStyle(address == vm.a ? Color.cyan : Color.primary)
+		.foregroundStyle(foregroundColor)
 		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 		.contentShape(Rectangle())
 		.onTapGesture { editing = address }
+	}
+
+	private var foregroundColor: Color {
+		switch true {
+		case address == (vm.instruction.i ? vm.m : vm.a): .yellow
+		default: .primary
+		}
 	}
 }
 

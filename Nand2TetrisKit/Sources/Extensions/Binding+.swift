@@ -9,7 +9,7 @@ import SwiftUI
 
 public extension Binding {
 	@inlinable
-	init<Root>(of root: Root, at field: ReferenceWritableKeyPath<Root, Value>) {
+	init<Root: Sendable>(of root: Root, at field: ReferenceWritableKeyPath<Root, Value>) {
 		self.init { root[keyPath: field] } set: { root[keyPath: field] = $0 }
 	}
 }

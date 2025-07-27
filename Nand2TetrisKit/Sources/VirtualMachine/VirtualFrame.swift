@@ -9,9 +9,9 @@ import SwiftUI
 import Nand2TetrisKit
 
 public struct VirtualFrameCell: View {
-	private let frame: VirtualFrame<ObservableVirtualMachine>
+	private let frame: RawVirtualFrame
 
-	public init(_ frame: VirtualFrame<ObservableVirtualMachine>) {
+	public init(_ frame: RawVirtualFrame) {
 		self.frame = frame
 	}
 

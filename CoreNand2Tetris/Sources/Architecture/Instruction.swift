@@ -175,6 +175,12 @@ public struct Instruction: RawRepresentable, Hashable {
 		}
 	}
 
+	/// Whether this instruction may jump.
+	@inlinable
+	public var hasJump: Bool {
+		!jump.isEmpty
+	}
+
 	/// Jump if the output is greater than 0
 	@inlinable
 	public var gt: Bool {
