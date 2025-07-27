@@ -10,12 +10,12 @@ import Nand2TetrisKit
 import Nand2TetrisCompanionKit
 
 @main struct Nand2TetrisApp: App {
-    var body: some Scene {
+	var body: some Scene {
 		// Special windows
-        EmulatorScene()
+		EmulatorScene()
 		VirtualMachineScene()
 
 		// Document windows
 		AssemblyScene()
-    }
+	}
 }
