@@ -6,30 +6,18 @@
 //
 
 import SwiftUI
+import Nand2TetrisUI
 
 public struct AssemblyEditor: View {
-	@Binding private var text: String
-
-	public init(_ text: Binding<String>) {
-		_text = text
-	}
+	@Binding var text: String
 
 	public var body: some View {
-		HStack {
-			VStack(alignment: .trailing) {
-				var i = 0
-				ForEach(text.split(separator: "\n", omittingEmptySubsequences: false), id: \.startIndex) { line in
-					let line = { () -> Int in
-						defer { i += 1 }
-						return i
-					}()
-					Text(verbatim: "\(line)")
-				}
-				Spacer()
-			}
-			.foregroundStyle(.secondary)
-			TextEditor(text: $text)
-		}
-		.monospaced()
+		CodeEditor($text)
 	}
+}
+
+#Preview {
+	@Previewable @State var text = AssemblyDocument().text
+	AssemblyEditor(text: $text)
+		.padding()
 }

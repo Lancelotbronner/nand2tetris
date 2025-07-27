@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2022-08-28.
 //
 
-public struct Instruction: RawRepresentable, Hashable, Sendable {
+public struct Instruction: RawRepresentable, Hashable, Codable, Sendable {
 	public var rawValue: UInt16
 
 	@inlinable public init(rawValue: UInt16) {

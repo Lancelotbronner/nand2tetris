@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
 	name: "Nand2TetrisUI",
 	platforms: [
-		.macOS(.v15),
+		.macOS("26"),
 		.iOS(.v18),
 	],
 	products: [

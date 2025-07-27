@@ -9,7 +9,7 @@ import SwiftUI
 import Nand2TetrisKit
 
 private struct AssemblerKey: EnvironmentKey {
-	static let defaultValue = Assembler()
+	nonisolated(unsafe) static let defaultValue = Assembler()
 }
 
 extension EnvironmentValues {

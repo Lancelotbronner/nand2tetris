@@ -28,7 +28,7 @@ struct AssemblyContentView: View {
 	var body: some View {
 		let assembler = assembler
 		NavigationStack {
-			AssemblyEditor(assembly)
+			AssemblyEditor(text: assembly)
 		}
 		.environment(\.assembler, assembler)
 		.inspector(isPresented: .constant(true)) {

@@ -15,7 +15,8 @@ public struct AssemblyProgramView: View {
 
 	private var instruction: Binding<Instruction> {
 		guard !assembler.program.isEmpty else { return .constant(Instruction.zero) }
-		return Bindable(assembler).program[selection]
+		return Binding<Instruction> { assembler.program[selection] }
+		set: { assembler.program[selection] = $0 }
 	}
 
 	public var body: some View {

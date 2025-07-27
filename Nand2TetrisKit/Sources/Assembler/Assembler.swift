@@ -7,8 +7,7 @@
 
 import Observation
 
-@Observable
-public final class Assembler: @unchecked Sendable {
+public final class Assembler {
 	public init(pedantic: Bool = true) {
 		self.pedantic = pedantic
 	}

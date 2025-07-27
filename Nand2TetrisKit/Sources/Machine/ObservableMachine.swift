@@ -9,7 +9,7 @@ import Observation
 
 @available(macOS 14, *)
 @Observable
-public final class ObservableMachine: Machine, @unchecked Sendable {
+public final class ObservableMachine: Machine {
 
 	public init(rom: Int = Hack.memory, ram: Int = Hack.memory) {
 		self.rom = Array(repeating: 0, count: rom)
